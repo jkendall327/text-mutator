@@ -114,7 +114,7 @@ struct TextMutator {
 impl TextMutator {
     fn new(mutation_rate: f32, seed: Option<u64>, swap_letters: bool,
            remove_punctuation: bool, homophones: bool) -> Self {
-        let mut rng = thread_rng();
+        let rng = thread_rng();
         if let Some(seed_val) = seed {
             // If we had a proper seeded RNG, we'd use it here
             // For this example, we'll just note that we'd use the seed
@@ -282,7 +282,8 @@ fn main() -> io::Result<()> {
             input = fs::read_to_string(path)?;
         },
         None => {
-            io::stdin().read_to_string(&mut input)?;
+            println!("Please enter input:");
+            io::stdin().read_line(&mut input)?;
         }
     }
 

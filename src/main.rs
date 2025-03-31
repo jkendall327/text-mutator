@@ -2,6 +2,8 @@ mod mutator;
 mod homophones;
 
 use std::fs;
+use tracing::{info, Level};
+use tracing_subscriber::FmtSubscriber;
 use std::io::{self, Write};
 use std::path::PathBuf;
 use mutator::TextMutator;
@@ -45,6 +47,14 @@ struct Opt {
 }
 
 fn main() -> io::Result<()> {
+    // Initialize tracing subscriber
+    let subscriber = FmtSubscriber::builder()
+        .with_max_level(Level::INFO)
+        .finish();
+    tracing::subscriber::set_global_default(subscriber)
+        .expect("Failed to set tracing subscriber");
+
+    info!("Starting text-mutator");
     let opt = Opt::from_args();
 
     // Set mutation flags

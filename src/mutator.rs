@@ -1,5 +1,6 @@
 use rand::{seq::SliceRandom, Rng, SeedableRng};
 use rand::rngs::StdRng;
+use tracing::{debug, info, trace, warn};
 
 use crate::homophones::HomophoneSets;
 
@@ -28,9 +29,19 @@ impl TextMutator {
         remove_punctuation: bool,
         homophones: bool) -> Self {
 
+        info!("Creating TextMutator with mutation_rate={}", mutation_rate);
+        debug!("Mutation flags: swap_letters={}, remove_punctuation={}, homophones={}", 
+               swap_letters, remove_punctuation, homophones);
+
         let rng = match seed {
-            Some(seed_val) => StdRng::seed_from_u64(seed_val),
-            None => StdRng::from_entropy(),
+            Some(seed_val) => {
+                debug!("Using provided seed: {}", seed_val);
+                StdRng::seed_from_u64(seed_val)
+            },
+            None => {
+                debug!("Using entropy-based seed");
+                StdRng::from_entropy()
+            },
         };
 
         TextMutator {
@@ -44,11 +55,13 @@ impl TextMutator {
     }
 
     fn find_possible_mutations(&self, text: &str) -> Vec<Mutation> {
+        trace!("Finding possible mutations in text of length {}", text.len());
         let mut mutations = Vec::new();
         let chars: Vec<char> = text.chars().collect();
 
         // Find possible letter swaps
         if self.swap_letters {
+            trace!("Looking for possible letter swaps");
             for i in 0..chars.len().saturating_sub(1) {
                 if chars[i].is_alphabetic() && chars[i+1].is_alphabetic() {
                     mutations.push(Mutation::SwapLetters(i));
@@ -58,6 +71,7 @@ impl TextMutator {
 
         // Find punctuation that could be removed
         if self.remove_punctuation {
+            trace!("Looking for punctuation to remove");
             for (i, c) in chars.iter().enumerate() {
                 if c.is_ascii_punctuation() {
                     mutations.push(Mutation::RemovePunctuation(i));
@@ -67,6 +81,7 @@ impl TextMutator {
 
         // Find homophones that could be replaced
         if self.use_homophones {
+            trace!("Looking for homophones to replace");
             let words: Vec<&str> = text.split_whitespace().collect();
             let mut char_index = 0;
 
@@ -83,6 +98,7 @@ impl TextMutator {
 
                 if !clean_word.is_empty() {
                     if self.homophones.find_matching_set(&clean_word).is_some() {
+                        trace!("Found homophone candidate: '{}'", clean_word);
                         mutations.push(Mutation::ReplaceHomophone(char_index, word.len()));
                     }
                 }
@@ -91,14 +107,18 @@ impl TextMutator {
             }
         }
 
+        debug!("Found {} possible mutations", mutations.len());
         mutations
     }
 
     pub(crate) fn mutate(&mut self, text: &str) -> (String, usize) {
+        info!("Mutating text of length {}", text.len());
         let possible_mutations = self.find_possible_mutations(text);
         let num_mutations = (possible_mutations.len() as f32 * self.mutation_rate) as usize;
+        debug!("Planning to apply {} mutations out of {} possible", num_mutations, possible_mutations.len());
 
         if possible_mutations.is_empty() || num_mutations == 0 {
+            info!("No mutations to apply");
             return (text.to_string(), 0);
         }
 
@@ -127,12 +147,15 @@ impl TextMutator {
         // Apply mutations
         let mut result = text.to_string();
         let mut actual_mutations = 0;
+        debug!("Applying mutations from end to beginning to avoid index shifts");
 
         for mutation in selected_mutations {
             match mutation {
                 Mutation::SwapLetters(i) => {
                     let mut chars: Vec<char> = result.chars().collect();
                     if i + 1 < chars.len() {
+                        trace!("Swapping letters at positions {} and {}: '{}' and '{}'", 
+                               i, i+1, chars[i], chars[i+1]);
                         chars.swap(i, i + 1);
                         result = chars.into_iter().collect();
                         actual_mutations += 1;
@@ -141,6 +164,7 @@ impl TextMutator {
                 Mutation::RemovePunctuation(i) => {
                     let mut chars: Vec<char> = result.chars().collect();
                     if i < chars.len() && chars[i].is_ascii_punctuation() {
+                        trace!("Removing punctuation '{}' at position {}", chars[i], i);
                         chars.remove(i);
                         result = chars.into_iter().collect();
                         actual_mutations += 1;
@@ -154,6 +178,8 @@ impl TextMutator {
                             .collect();
 
                         if let Some(alternative) = self.homophones.get_alternative(&clean_word, &mut self.rng) {
+                            trace!("Replacing homophone '{}' with '{}'", clean_word, alternative);
+                            
                             // Preserve trailing punctuation if any
                             let trailing_punct: String = word.chars()
                                 .filter(|c| c.is_ascii_punctuation())
@@ -168,6 +194,7 @@ impl TextMutator {
             }
         }
 
+        info!("Applied {} mutations", actual_mutations);
         (result, actual_mutations)
     }
 }

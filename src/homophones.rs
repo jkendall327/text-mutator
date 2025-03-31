@@ -52,3 +52,83 @@ impl HomophoneSets {
         None
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use rand::thread_rng;
+
+    #[test]
+    fn test_find_matching_set_found() {
+        let hs = HomophoneSets::new();
+        let set = hs.find_matching_set("your");
+        assert!(set.is_some());
+        assert!(set.unwrap().contains(&"you're"));
+    }
+
+    #[test]
+    fn test_find_matching_set_case_insensitive() {
+        let hs = HomophoneSets::new();
+        let set = hs.find_matching_set("Their");
+        assert!(set.is_some());
+        assert!(set.unwrap().contains(&"there"));
+        assert!(set.unwrap().contains(&"they're"));
+    }
+
+    #[test]
+    fn test_find_matching_set_not_found() {
+        let hs = HomophoneSets::new();
+        let set = hs.find_matching_set("hello");
+        assert!(set.is_none());
+    }
+
+    #[test]
+    fn test_get_alternative_basic() {
+        let hs = HomophoneSets::new();
+        let mut rng = thread_rng();
+        let alt = hs.get_alternative("to", &mut rng);
+        assert!(alt.is_some());
+        let alt_word = alt.unwrap();
+        assert!(alt_word == "too" || alt_word == "two");
+    }
+
+     #[test]
+    fn test_get_alternative_case_preserved() {
+        let hs = HomophoneSets::new();
+        let mut rng = thread_rng();
+        // Test "Your" -> "You're"
+        let alt_your = hs.get_alternative("Your", &mut rng);
+        assert!(alt_your.is_some());
+        assert_eq!(alt_your.unwrap(), "You're");
+
+        // Test "They're" -> "Their" or "There"
+        let alt_theyre = hs.get_alternative("They're", &mut rng);
+        assert!(alt_theyre.is_some());
+        let alt_word = alt_theyre.unwrap();
+        assert!(alt_word == "Their" || alt_word == "There");
+        assert!(alt_word.chars().next().unwrap().is_uppercase());
+    }
+
+    #[test]
+    fn test_get_alternative_no_match() {
+        let hs = HomophoneSets::new();
+        let mut rng = thread_rng();
+        let alt = hs.get_alternative("world", &mut rng);
+        assert!(alt.is_none());
+    }
+
+     #[test]
+    fn test_get_alternative_single_option() {
+        let hs = HomophoneSets::new();
+        let mut rng = thread_rng();
+        // Test "affect" -> "effect"
+        let alt_affect = hs.get_alternative("affect", &mut rng);
+        assert!(alt_affect.is_some());
+        assert_eq!(alt_affect.unwrap(), "effect");
+
+        // Test "Effect" -> "Affect" (case preserved)
+        let alt_effect_caps = hs.get_alternative("Effect", &mut rng);
+        assert!(alt_effect_caps.is_some());
+        assert_eq!(alt_effect_caps.unwrap(), "Affect");
+    }
+}

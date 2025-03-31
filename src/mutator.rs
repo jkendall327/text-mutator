@@ -1,4 +1,5 @@
-use rand::{seq::SliceRandom, thread_rng};
+use rand::{seq::SliceRandom, Rng, SeedableRng};
+use rand::rngs::StdRng;
 
 use crate::homophones::HomophoneSets;
 
@@ -12,7 +13,7 @@ enum Mutation {
 /// Applies mutations to text
 pub struct TextMutator {
     mutation_rate: f32,
-    rng: rand::rngs::ThreadRng,
+    rng: StdRng,
     swap_letters: bool,
     remove_punctuation: bool,
     use_homophones: bool,
@@ -27,13 +28,10 @@ impl TextMutator {
         remove_punctuation: bool,
         homophones: bool) -> Self {
 
-        let rng = thread_rng();
-
-        if let Some(seed_val) = seed {
-            // If we had a proper seeded RNG, we'd use it here
-            // For this example, we'll just note that we'd use the seed
-            println!("Note: Seed value {} would be used here", seed_val);
-        }
+        let rng = match seed {
+            Some(seed_val) => StdRng::seed_from_u64(seed_val),
+            None => StdRng::from_entropy(),
+        };
 
         TextMutator {
             mutation_rate,

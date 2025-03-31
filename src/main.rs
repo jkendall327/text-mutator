@@ -2,10 +2,9 @@ mod mutator;
 mod homophones;
 
 use std::fs;
-use std::io::{self, Read, Write};
+use std::io::{self, Write};
 use std::path::PathBuf;
 use mutator::TextMutator;
-use rand::{Rng, thread_rng, seq::SliceRandom};
 use structopt::StructOpt;
 
 /// A program that deliberately introduces minor errors into text for proofreading practice

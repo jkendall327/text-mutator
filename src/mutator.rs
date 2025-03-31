@@ -20,9 +20,15 @@ pub struct TextMutator {
 }
 
 impl TextMutator {
-    pub(crate) fn new(mutation_rate: f32, seed: Option<u64>, swap_letters: bool,
-           remove_punctuation: bool, homophones: bool) -> Self {
+    pub(crate) fn new(
+        mutation_rate: f32,
+        seed: Option<u64>,
+        swap_letters: bool,
+        remove_punctuation: bool,
+        homophones: bool) -> Self {
+
         let rng = thread_rng();
+
         if let Some(seed_val) = seed {
             // If we had a proper seeded RNG, we'd use it here
             // For this example, we'll just note that we'd use the seed

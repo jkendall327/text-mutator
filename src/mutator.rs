@@ -11,6 +11,102 @@ enum Mutation {
     ReplaceHomophone(usize, usize),  // Replace word at index with length
 }
 
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_new_text_mutator() {
+        let mutator = TextMutator::new(0.5, Some(42), true, true, true);
+        assert_eq!(mutator.mutation_rate, 0.5);
+        assert!(mutator.swap_letters);
+        assert!(mutator.remove_punctuation);
+        assert!(mutator.use_homophones);
+    }
+
+    #[test]
+    fn test_find_possible_mutations_empty_text() {
+        let mutator = TextMutator::new(0.5, Some(42), true, true, true);
+        let mutations = mutator.find_possible_mutations("");
+        assert!(mutations.is_empty());
+    }
+
+    #[test]
+    fn test_find_possible_mutations_swap_letters() {
+        let mutator = TextMutator::new(0.5, Some(42), true, false, false);
+        let mutations = mutator.find_possible_mutations("abc");
+        assert_eq!(mutations.len(), 2); // 'a' can swap with 'b', 'b' can swap with 'c'
+    }
+
+    #[test]
+    fn test_find_possible_mutations_punctuation() {
+        let mutator = TextMutator::new(0.5, Some(42), false, true, false);
+        let mutations = mutator.find_possible_mutations("a,b.c");
+        assert_eq!(mutations.len(), 2); // ',' and '.' can be removed
+    }
+
+    #[test]
+    fn test_mutate_no_mutations() {
+        let mut mutator = TextMutator::new(0.0, Some(42), true, true, true);
+        let (result, count) = mutator.mutate("Hello, world!");
+        assert_eq!(result, "Hello, world!");
+        assert_eq!(count, 0);
+    }
+
+    #[test]
+    fn test_mutate_with_seed() {
+        // Using a fixed seed should give deterministic results
+        let mut mutator1 = TextMutator::new(1.0, Some(42), true, true, false);
+        let (result1, count1) = mutator1.mutate("Hello, world!");
+        
+        let mut mutator2 = TextMutator::new(1.0, Some(42), true, true, false);
+        let (result2, count2) = mutator2.mutate("Hello, world!");
+        
+        assert_eq!(result1, result2);
+        assert_eq!(count1, count2);
+    }
+
+    #[test]
+    fn test_mutate_swap_letters() {
+        let mut mutator = TextMutator::new(1.0, Some(42), true, false, false);
+        let (result, count) = mutator.mutate("abcdef");
+        assert_ne!(result, "abcdef");
+        assert!(count > 0);
+    }
+
+    #[test]
+    fn test_mutate_remove_punctuation() {
+        let mut mutator = TextMutator::new(1.0, Some(42), false, true, false);
+        let (result, count) = mutator.mutate("Hello, world!");
+        assert_ne!(result, "Hello, world!");
+        assert!(count > 0);
+        // The result should have fewer punctuation marks
+        assert!(result.chars().filter(|c| c.is_ascii_punctuation()).count() < 
+               "Hello, world!".chars().filter(|c| c.is_ascii_punctuation()).count());
+    }
+
+    #[test]
+    fn test_mutate_homophones() {
+        let mut mutator = TextMutator::new(1.0, Some(42), false, false, true);
+        let (result, count) = mutator.mutate("Your book is there.");
+        assert_ne!(result, "Your book is there.");
+        assert!(count > 0);
+    }
+
+    #[test]
+    fn test_mutation_rate_scaling() {
+        let text = "The quick brown fox jumps over the lazy dog.";
+        
+        let mut low_rate_mutator = TextMutator::new(0.1, Some(42), true, true, true);
+        let (_, low_count) = low_rate_mutator.mutate(text);
+        
+        let mut high_rate_mutator = TextMutator::new(0.9, Some(42), true, true, true);
+        let (_, high_count) = high_rate_mutator.mutate(text);
+        
+        assert!(high_count > low_count, "Higher mutation rate should produce more mutations");
+    }
+}
+
 /// Applies mutations to text
 pub struct TextMutator {
     mutation_rate: f32,

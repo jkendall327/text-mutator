@@ -1,0 +1,4 @@
+- Get Azure pipeline stuff set up immediately, make it easy to deploy incrementally.
+- Get the React boilerplate in place. Vite?
+- Turn Rust backend into API.
+- Think about API endpoints.

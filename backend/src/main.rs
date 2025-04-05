@@ -2,10 +2,7 @@ mod homophones;
 mod mutator;
 
 use axum::{
-    Router,
-    http::{HeaderValue, Method},
-    response::Html,
-    routing::get,
+    http::{HeaderValue, Method}, response::{Html, IntoResponse}, routing::{get, post}, Json, Router
 };
 use mutator::TextMutator;
 use std::io::{self, Write};
@@ -28,9 +25,12 @@ async fn main() -> io::Result<()> {
 
     let cors = CorsLayer::new()
         .allow_origin("http://localhost:3000".parse::<HeaderValue>().unwrap())
-        .allow_methods([Method::POST]);
+        .allow_methods([Method::POST, Method::GET]);
 
-    let app = Router::new().route("/", get(handler)).layer(cors);
+    let app = Router::new()
+    .route("/api/health", get(health))
+    .route("/api/mutate", post(mutate))
+    .layer(cors);
 
     let listener = tokio::net::TcpListener::bind("127.0.0.1:8080")
         .await
@@ -73,6 +73,10 @@ async fn main() -> io::Result<()> {
     Ok(())
 }
 
-async fn handler() -> Html<&'static str> {
-    Html("<h1>Hello world!</h1>")
+async fn health() -> Html<&'static str> {
+    Html("Healthy")
+}
+
+async fn mutate() -> impl IntoResponse {
+    Json(vec!["Hello", "World"])
 }

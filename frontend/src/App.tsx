@@ -1,10 +1,26 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
 
 function App() {
   const [count, setCount] = useState(0)
+  const [backendOk, setBackendOk] = useState<string>("dead")
+
+  const fetchUser = async () => {
+      const apiUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
+      const response = await fetch(`${apiUrl}/api/health/`);
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      setBackendOk("live");
+  };
+
+  useEffect(() => {
+    fetchUser();
+  }, []);
 
   return (
     <>
@@ -26,7 +42,7 @@ function App() {
         </p>
       </div>
       <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
+        Backend: {backendOk}
       </p>
     </>
   )

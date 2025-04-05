@@ -32,13 +32,13 @@ pub struct MutationResponseDto {
 #[derive(serde::Serialize)]
 pub struct MutationItemDto {
     /// The character-based index where, in the mutated passage, this mutation begins.
-    start: usize,
+    pub start: usize,
 
     /// The character-based index where, in the mutated passage, this mutation ends.
-    end: usize,
+    pub end: usize,
 
     /// The type of mutation indicated by this item.
-    r#type: MutationDto,
+    pub r#type: MutationDto,
 }
 
 /// A mutation that can be applied to text
@@ -70,5 +70,5 @@ pub(crate) enum Mutation {
 
 pub(crate) struct MutationResponse {
     pub mutated_text: String,
-    pub mutations: Vec<MutationItemDto>,
+    pub mutations: Vec<MutationItem>,
 }

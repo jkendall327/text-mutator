@@ -8,7 +8,7 @@ use axum::{
     response::IntoResponse,
     routing::{get, post},
 };
-use models::{MutationRequest, MutationResponseDto};
+use models::{MutationItemDto, MutationRequest, MutationResponseDto};
 use mutator::TextMutator;
 use std::io::{self};
 use tower_http::cors::CorsLayer;
@@ -72,7 +72,11 @@ async fn mutate(Json(payload): Json<MutationRequest>) -> impl IntoResponse {
 
     let response = MutationResponseDto {
         mutated_text: response.mutated_text,
-        mutations: response.mutations,
+        mutations: response.mutations.iter().map(|f| MutationItemDto {
+            start: 1,
+            end: 2,
+            r#type: models::MutationDto::SwapLetters
+        }).collect(),
     };
 
     Json(response)

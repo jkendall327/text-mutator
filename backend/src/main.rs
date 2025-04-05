@@ -1,15 +1,14 @@
 mod homophones;
 mod models;
 mod mutator;
+mod handler;
 
 use axum::{
-    Json, Router,
+    Router,
     http::{HeaderValue, Method},
-    response::IntoResponse,
     routing::{get, post},
 };
-use models::{MutationItemDto, MutationRequest, MutationResponseDto};
-use mutator::TextMutator;
+use handler::*;
 use std::io::{self};
 use tower_http::cors::CorsLayer;
 use tracing::{Level, info};
@@ -48,44 +47,3 @@ async fn main() -> io::Result<()> {
     Ok(())
 }
 
-async fn health() -> &'static str {
-    "Healthy"
-}
-
-#[axum::debug_handler]
-async fn mutate(Json(payload): Json<MutationRequest>) -> impl IntoResponse {
-    // Set mutation flags
-    let swap_letters = payload.config.allow_swaps;
-    let remove_punctuation = payload.config.allow_punctuation_removal;
-    let homophones = payload.config.allow_homophones;
-
-    // Apply mutations
-    let mut text_mutator = TextMutator::new(
-        payload.config.mutation_rate,
-        payload.config.seed,
-        swap_letters,
-        remove_punctuation,
-        homophones,
-    );
-
-    let response = text_mutator.mutate(&payload.text);
-
-    let response = MutationResponseDto {
-        mutated_text: response.mutated_text,
-        mutations: response.mutations.iter().map(|f| {
-            let mapped_type = match f.r#type {
-                models::Mutation::SwapLetters(_) => models::MutationDto::SwapLetters,
-                models::Mutation::RemovePunctuation(_) => models::MutationDto::RemovePunctuation,
-                models::Mutation::ReplaceHomophone(_, _) => models::MutationDto::ReplaceHomophone,
-            };
-
-            MutationItemDto {
-                start: f.start,
-                end: f.end,
-                r#type: mapped_type
-            }
-        }).collect(),
-    };
-
-    Json(response)
-}

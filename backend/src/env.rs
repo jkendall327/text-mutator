@@ -9,6 +9,13 @@ pub struct EnvironmentVariables {
 }
 
 impl EnvironmentVariables {
+    pub fn empty() -> EnvironmentVariables {
+        EnvironmentVariables {
+            backend_url: Cow::from(""),
+            frontend_url: Cow::from(""),
+        }
+    }
+
     /// # Errors
     /// Errors if one of the environment variables is not found.
     pub fn from_env() -> anyhow::Result<Self> {

@@ -17,6 +17,10 @@ anyhow = "1.0.97"
 dotenvy = "0.15.7"
 uuid = { version = "1.16.0", features = ["v4"]}
 
+[dev-dependencies]
+tower = { version = "0.5.2", features = ["util"] }
+http-body-util = "0.1.0"
+
 [lints.clippy]
 # Enable pedantic lints at "warn" level
 pedantic = "warn"

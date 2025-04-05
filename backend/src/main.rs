@@ -134,3 +134,34 @@ async fn shutdown_signal() {
         () = terminate => {},
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use crate::{app, env::EnvironmentVariables, get_route};
+    use axum::{
+        body::Body,
+        http::{Request, StatusCode},
+    };
+    use http_body_util::BodyExt;
+    use tower::ServiceExt;
+
+    #[tokio::test]
+    async fn app_starts_up_and_serves_healthcheck() {
+        let app = app(&EnvironmentVariables::empty());
+
+        let response = app
+            .oneshot(
+                Request::builder()
+                    .uri(get_route("health"))
+                    .body(Body::empty())
+                    .unwrap(),
+            )
+            .await
+            .unwrap();
+
+        assert_eq!(response.status(), StatusCode::OK);
+
+        let body = response.into_body().collect().await.unwrap().to_bytes();
+        assert_eq!(&body[..], b"Healthy");
+    }
+}

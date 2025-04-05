@@ -2,3 +2,4 @@
 - Get the React boilerplate in place. Vite?
 - Turn Rust backend into API.
 - Think about API endpoints.
+- note: remember to use relative urls for frontend-to-backend calls.

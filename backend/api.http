@@ -1,15 +1,17 @@
 @hostname = http://localhost
 @port = 8080
 @host = {{hostname}}:{{port}}
+@version = 1
+@path = {{host}}/api/v{{version}}
 
 # Healthcheck
-GET {{host}}/api/health HTTP/1.1
+GET {{path}}/health HTTP/1.1
 Accept: application/json
 
 ###
 
 # Basic mutation test
-POST {{host}}/api/mutate HTTP/1.1
+POST {{path}}/mutate HTTP/1.1
 Content-Type: application/json
 
 {

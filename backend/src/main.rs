@@ -4,16 +4,22 @@ mod homophones;
 mod models;
 mod mutator;
 
+use std::time::Duration;
+
 use axum::{
     Router,
-    http::{HeaderValue, Method},
+    body::Body,
+    http::{HeaderValue, Method, Request},
+    response::Response,
     routing::{get, post},
 };
 use env::EnvironmentVariables;
 use tokio::signal;
-use tower_http::cors::CorsLayer;
+use tower_http::{cors::CorsLayer, trace::TraceLayer};
+use tracing::{Level, Span};
 use tracing_appender::rolling;
 use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt};
+use uuid::Uuid;
 
 const CURRENT_VERSION: usize = 1;
 
@@ -46,11 +52,33 @@ async fn main() -> anyhow::Result<()> {
         .allow_origin(env.frontend_url.parse::<HeaderValue>().unwrap())
         .allow_methods([Method::POST, Method::GET]);
 
+    let tracer = TraceLayer::new_for_http()
+        .make_span_with(|request: &Request<Body>| {
+            let path = request.uri().path().to_owned();
+            let method = request.method().clone();
+
+            tracing::span!(
+                Level::INFO,
+                "request",
+                method = %method,
+                path = %path,
+                request_id = %Uuid::new_v4(),
+            )
+        })
+        .on_response(|response: &Response, latency: Duration, _span: &Span| {
+            tracing::info!(
+                status = %response.status().as_u16(),
+                latency = %latency.as_millis(),
+                "finished processing request"
+            );
+        });
+
     let app = Router::new()
         .route(get_route("health").as_str(), get(handler::health))
         .route(get_route("mutate").as_str(), post(handler::mutate))
         .fallback(handler::fallback)
-        .layer(cors);
+        .layer(cors)
+        .layer(tracer);
 
     let backend_url = env.backend_url.to_string();
 

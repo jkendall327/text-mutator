@@ -128,10 +128,10 @@ This is a public-facing web application designed to help users spot small, delib
 -   **Containerization**: **Docker** will be used to package the application components into a single, deployable image. This image will contain:
     1.  The compiled **Rust backend** executable.
     2.  The static **React frontend** build artifacts (HTML, CSS, JavaScript files).
-    3.  An **Nginx web server**.
+    3.  A **Caddy web server**.
 -   **Container Runtime Configuration**:
-    -   **Nginx** will serve as the primary entry point for incoming HTTP requests to the container (listening on the port specified by App Service, typically 80 or 8080).
-    -   Nginx will be configured to:
+    -   **Caddy** will serve as the primary entry point for incoming HTTP requests to the container (listening on the port specified by App Service, typically 80 or 8080).
+    -   Caddy will be configured to:
         -   Serve the static React frontend files for requests to the root (`/`) and other non-API routes.
         -   Act as a reverse proxy for requests matching the `/api/*` path, forwarding them to the Rust backend service running within the same container (e.g., listening on `localhost:8080`).
     -   The **Rust backend application** will run as a separate process within the container, listening internally on a designated port (e.g., 8080) and handling only the API requests proxied by Nginx.

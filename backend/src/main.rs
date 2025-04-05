@@ -59,14 +59,14 @@ pub struct EnvironmentVariables {
 
 impl EnvironmentVariables {
     pub fn from_env() -> anyhow::Result<Self> {
-        dotenv::dotenv().ok();
+        dotenvy::dotenv().ok();
 
         Ok(Self {
-            frontend_url: match dotenv::var("MUTATOR_FRONTEND_URL") {
+            frontend_url: match dotenvy::var("MUTATOR_FRONTEND_URL") {
                 Ok(url) => url.into(),
                 Err(err) => bail!("missing frontend URL: {err}"),
             },
-            backend_url: match dotenv::var("MUTATOR_BACKEND_URL") {
+            backend_url: match dotenvy::var("MUTATOR_BACKEND_URL") {
                 Ok(url) => url.into(),
                 Err(err) => bail!("missing backend URL: {err}"),
             },

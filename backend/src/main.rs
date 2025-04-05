@@ -144,8 +144,9 @@ mod tests {
         models::{MutationOptions, MutationRequest},
     };
     use axum::{
+        Router,
         body::Body,
-        http::{self, Request, StatusCode},
+        http::{self, Request, Response, StatusCode},
     };
     use http_body_util::BodyExt;
     use serde_json::json;
@@ -198,27 +199,24 @@ mod tests {
 
         let req = MutationRequest {
             text: invalid_input,
-            config: MutationOptions {
-                allow_homophones: true,
-                allow_punctuation_removal: true,
-                allow_swaps: true,
-                mutation_rate: 1.0,
-                seed: None,
-            },
+            config: MutationOptions::default(),
         };
 
-        let response = app
-            .oneshot(
-                Request::builder()
-                    .method(http::Method::POST)
-                    .header(http::header::CONTENT_TYPE, mime::APPLICATION_JSON.as_ref())
-                    .uri(get_route("mutate"))
-                    .body(Body::from(serde_json::to_vec(&json!(req)).unwrap()))
-                    .unwrap(),
-            )
-            .await
-            .unwrap();
+        let response = send_json_request(app, req).await;
 
         assert_eq!(response.status(), StatusCode::BAD_REQUEST);
+    }
+
+    async fn send_json_request(app: Router, req: MutationRequest) -> Response<Body> {
+        app.oneshot(
+            Request::builder()
+                .method(http::Method::POST)
+                .header(http::header::CONTENT_TYPE, mime::APPLICATION_JSON.as_ref())
+                .uri(get_route("mutate"))
+                .body(Body::from(serde_json::to_vec(&json!(req)).unwrap()))
+                .unwrap(),
+        )
+        .await
+        .unwrap()
     }
 }

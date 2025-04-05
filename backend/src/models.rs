@@ -10,7 +10,7 @@ pub struct MutationRequest {
     pub config: MutationOptions,
 }
 
-#[derive(serde::Serialize, serde::Deserialize)]
+#[derive(serde::Serialize, serde::Deserialize, Default)]
 pub struct MutationOptions {
     pub mutation_rate: f32,
     pub allow_swaps: bool,

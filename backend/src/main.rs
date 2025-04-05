@@ -37,6 +37,7 @@ async fn main() -> anyhow::Result<()> {
     let app = Router::new()
         .route("/api/health", get(health))
         .route("/api/mutate", post(mutate))
+        .fallback(fallback)
         .layer(cors);
 
     let backend_url = env.backend_url.to_string();

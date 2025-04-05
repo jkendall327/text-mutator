@@ -1,9 +1,13 @@
-use axum::{response::IntoResponse, Json};
+use axum::{http::{StatusCode, Uri}, response::IntoResponse, Json};
 
 use crate::{models::*, mutator::TextMutator};
 
 pub async fn health() -> &'static str {
     "Healthy"
+}
+
+pub async fn fallback(uri: Uri) -> (StatusCode, String) {
+    (StatusCode::NOT_FOUND, format!("Invalid request path: {uri}"))
 }
 
 #[axum::debug_handler]

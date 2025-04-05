@@ -29,15 +29,12 @@ impl TextMutator {
             swap_letters, remove_punctuation, homophones
         );
 
-        let rng = match seed {
-            Some(seed_val) => {
-                debug!("Using provided seed: {}", seed_val);
-                StdRng::seed_from_u64(seed_val)
-            }
-            None => {
-                debug!("Using entropy-based seed");
-                StdRng::from_os_rng()
-            }
+        let rng = if let Some(seed_val) = seed {
+            debug!("Using provided seed: {}", seed_val);
+            StdRng::seed_from_u64(seed_val)
+        } else {
+            debug!("Using entropy-based seed");
+            StdRng::from_os_rng()
         };
 
         TextMutator {
@@ -115,6 +112,7 @@ impl TextMutator {
         info!("Mutating text of length {}", text.len());
         let possible_mutations = self.find_possible_mutations(text);
         let num_mutations = (possible_mutations.len() as f32 * self.mutation_rate) as usize;
+
         debug!(
             "Planning to apply {} mutations out of {} possible",
             num_mutations,
@@ -137,15 +135,15 @@ impl TextMutator {
         // Sort by position to apply from end to beginning (to avoid index shifts)
         selected_mutations.sort_by(|a, b| {
             let pos_a = match a {
-                Mutation::SwapLetters(i) => *i,
-                Mutation::RemovePunctuation(i) => *i,
-                Mutation::ReplaceHomophone(i, _) => *i,
+                Mutation::SwapLetters(i)
+                | Mutation::RemovePunctuation(i)
+                | Mutation::ReplaceHomophone(i, _) => *i,
             };
 
             let pos_b = match b {
-                Mutation::SwapLetters(i) => *i,
-                Mutation::RemovePunctuation(i) => *i,
-                Mutation::ReplaceHomophone(i, _) => *i,
+                Mutation::SwapLetters(i)
+                | Mutation::RemovePunctuation(i)
+                | Mutation::ReplaceHomophone(i, _) => *i,
             };
 
             pos_b.cmp(&pos_a) // Reverse order
@@ -200,7 +198,7 @@ impl TextMutator {
 
                             // Preserve trailing punctuation if any
                             let trailing_punct: String =
-                                word.chars().filter(|c| c.is_ascii_punctuation()).collect();
+                                word.chars().filter(char::is_ascii_punctuation).collect();
 
                             let replacement = alternative + &trailing_punct;
                             result = result[..i].to_string() + &replacement + &result[i + len..];

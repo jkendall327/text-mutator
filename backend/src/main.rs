@@ -9,7 +9,7 @@ use axum::{
     http::{HeaderValue, Method},
     routing::{get, post},
 };
-use handler::*;
+use handler::{fallback, health, mutate};
 use std::borrow::Cow;
 use tower_http::cors::CorsLayer;
 use tracing::{Level, info};

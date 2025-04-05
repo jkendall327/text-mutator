@@ -14,3 +14,13 @@ serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
 anyhow = "1.0.97"
 dotenvy = "0.15.7"
+
+[lints.clippy]
+# Enable pedantic lints at "warn" level
+pedantic = "warn"
+
+# Enable various lint groups at different levels
+complexity = "warn"
+correctness = "warn"
+suspicious = "warn"
+style = "warn"

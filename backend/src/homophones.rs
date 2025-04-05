@@ -1,4 +1,4 @@
-use rand::{seq::IndexedRandom, Rng};
+use rand::{Rng, seq::IndexedRandom};
 
 /// Common homophones that can be swapped
 pub(crate) struct HomophoneSets {
@@ -47,9 +47,9 @@ impl HomophoneSets {
                         alt_chars[0] = alt_chars[0].to_uppercase().next().unwrap();
                     }
                     return Some(alt_chars.into_iter().collect());
-                } else {
-                    return Some(alt.to_string());
                 }
+
+                return Some(alt.to_string());
             }
         }
         None

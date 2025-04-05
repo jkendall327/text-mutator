@@ -2,7 +2,10 @@ mod homophones;
 mod mutator;
 
 use axum::{
-    http::{HeaderValue, Method}, response::{Html, IntoResponse}, routing::{get, post}, Json, Router
+    Json, Router,
+    http::{HeaderValue, Method},
+    response::{Html, IntoResponse},
+    routing::{get, post},
 };
 use mutator::{Mutation, TextMutator};
 use std::io::{self, Write};
@@ -28,9 +31,9 @@ async fn main() -> io::Result<()> {
         .allow_methods([Method::POST, Method::GET]);
 
     let app = Router::new()
-    .route("/api/health", get(health))
-    .route("/api/mutate", post(mutate))
-    .layer(cors);
+        .route("/api/health", get(health))
+        .route("/api/mutate", post(mutate))
+        .layer(cors);
 
     let listener = tokio::net::TcpListener::bind("127.0.0.1:8080")
         .await
@@ -40,36 +43,6 @@ async fn main() -> io::Result<()> {
 
     axum::serve(listener, app).await.unwrap();
 
-    return Ok(());
-
-    // Set mutation flags
-    let swap_letters = true;
-    let remove_punctuation = true;
-    let homophones = true;
-
-    // If no specific mutations are enabled, default to all
-    let (swap_letters, remove_punctuation, homophones) =
-        if !swap_letters && !remove_punctuation && !homophones {
-            (true, true, true)
-        } else {
-            (swap_letters, remove_punctuation, homophones)
-        };
-
-    // Read input
-    let mut input = String::new();
-    println!("Please enter input:");
-    io::stdin().read_line(&mut input)?;
-
-    // Apply mutations
-    let mut text_mutator =
-        TextMutator::new(1.0, None, swap_letters, remove_punctuation, homophones);
-
-    let (mutated_text, num_mutations) = text_mutator.mutate(&input);
-
-    // Write output
-    io::stdout().write_all(mutated_text.as_bytes())?;
-    eprintln!("\n--- Added {} mutations to the text ---", num_mutations);
-
     Ok(())
 }
 
@@ -78,28 +51,46 @@ async fn health() -> Html<&'static str> {
 }
 
 async fn mutate() -> impl IntoResponse {
-    Json(vec!["Hello", "World"])
+    // Set mutation flags
+    let swap_letters = true;
+    let remove_punctuation = true;
+    let homophones = true;
+
+    // Apply mutations
+    let mut text_mutator =
+        TextMutator::new(1.0, None, swap_letters, remove_punctuation, homophones);
+
+    let (mutated_text, num_mutations) = text_mutator.mutate("hello world");
+
+    let response = MutationResponse {
+        mutatedText: mutated_text,
+        mutations: vec![]
+    };
+
+    Json(response)
 }
 
 pub struct MutationRequest {
     text: String,
-    config: MutationOptions
+    config: MutationOptions,
 }
 
 pub struct MutationOptions {
     mutation_rate: f32,
     allow_swaps: bool,
     allow_punctuation_removal: bool,
-    allow_homophones: bool
+    allow_homophones: bool,
 }
 
+#[derive(serde::Serialize)]
 pub struct MutationResponse {
     mutatedText: String,
-    mutations: Vec<MutationItem>
+    mutations: Vec<MutationItem>,
 }
 
+#[derive(serde::Serialize)]
 pub struct MutationItem {
     start: usize,
     end: usize,
-    r#type: Mutation
+    r#type: Mutation,
 }

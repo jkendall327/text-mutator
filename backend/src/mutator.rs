@@ -5,6 +5,7 @@ use tracing::{debug, info, trace};
 use crate::homophones::HomophoneSets;
 
 /// A mutation that can be applied to text
+#[derive(serde::Serialize)]
 pub enum Mutation {
     SwapLetters(usize),             // Swap with next letter
     RemovePunctuation(usize),       // Remove punctuation at index

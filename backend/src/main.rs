@@ -5,12 +5,12 @@ mod mutator;
 use axum::{
     Json, Router,
     http::{HeaderValue, Method},
-    response::{Html, IntoResponse},
+    response::IntoResponse,
     routing::{get, post},
 };
 use models::{MutationRequest, MutationResponseDto};
 use mutator::TextMutator;
-use std::io::{self, Write};
+use std::io::{self};
 use tower_http::cors::CorsLayer;
 use tracing::{Level, info};
 use tracing_subscriber::FmtSubscriber;
@@ -68,10 +68,10 @@ async fn mutate(Json(payload): Json<MutationRequest>) -> impl IntoResponse {
         homophones,
     );
 
-    let response = text_mutator.mutate("hello world");
+    let response = text_mutator.mutate(&payload.text);
 
     let response = MutationResponseDto {
-        mutatedText: response.mutated_text,
+        mutated_text: response.mutated_text,
         mutations: response.mutations,
     };
 

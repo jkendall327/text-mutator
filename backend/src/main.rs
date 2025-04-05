@@ -72,10 +72,18 @@ async fn mutate(Json(payload): Json<MutationRequest>) -> impl IntoResponse {
 
     let response = MutationResponseDto {
         mutated_text: response.mutated_text,
-        mutations: response.mutations.iter().map(|f| MutationItemDto {
-            start: 1,
-            end: 2,
-            r#type: models::MutationDto::SwapLetters
+        mutations: response.mutations.iter().map(|f| {
+            let mapped_type = match f.r#type {
+                models::Mutation::SwapLetters(_) => models::MutationDto::SwapLetters,
+                models::Mutation::RemovePunctuation(_) => models::MutationDto::RemovePunctuation,
+                models::Mutation::ReplaceHomophone(_, _) => models::MutationDto::ReplaceHomophone,
+            };
+
+            MutationItemDto {
+                start: f.start,
+                end: f.end,
+                r#type: mapped_type
+            }
         }).collect(),
     };
 

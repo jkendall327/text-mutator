@@ -57,9 +57,9 @@ pub enum MutationDto {
 // Domain types
 
 pub(crate) struct MutationItem {
-    start: usize,
-    end: usize,
-    r#type: Mutation,
+    pub start: usize,
+    pub end: usize,
+    pub r#type: Mutation,
 }
 
 pub(crate) enum Mutation {

@@ -1,6 +1,6 @@
-use rand::{seq::SliceRandom, Rng, SeedableRng};
+use rand::{seq::SliceRandom, SeedableRng};
 use rand::rngs::StdRng;
-use tracing::{debug, info, trace, warn};
+use tracing::{debug, info, trace};
 
 use crate::homophones::HomophoneSets;
 

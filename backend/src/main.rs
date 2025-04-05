@@ -1,11 +1,9 @@
 mod mutator;
 mod homophones;
 
-use std::fs;
 use tracing::{info, Level};
 use tracing_subscriber::FmtSubscriber;
 use std::io::{self, Write};
-use std::path::PathBuf;
 use mutator::TextMutator;
 
 /// A program that deliberately introduces minor errors into text for proofreading practice
@@ -36,7 +34,6 @@ fn main() -> io::Result<()> {
     let mut input = String::new();
     println!("Please enter input:");
     io::stdin().read_line(&mut input)?;
-
 
     // Apply mutations
     let mut text_mutator = TextMutator::new(

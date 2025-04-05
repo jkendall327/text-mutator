@@ -111,7 +111,13 @@ impl TextMutator {
     pub(crate) fn mutate(&mut self, text: &str) -> MutationResponse {
         info!("Mutating text of length {}", text.len());
         let possible_mutations = self.find_possible_mutations(text);
-        let num_mutations = (possible_mutations.len() as f32 * self.mutation_rate) as usize;
+
+        debug_assert!(self.mutation_rate > 0.0);
+
+        #[allow(clippy::cast_possible_truncation)]
+        #[allow(clippy::cast_sign_loss)]
+        #[allow(clippy::cast_precision_loss)]
+        let num_mutations = (possible_mutations.len() as f32 * self.mutation_rate).floor() as usize;
 
         debug!(
             "Planning to apply {} mutations out of {} possible",

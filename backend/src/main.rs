@@ -1,6 +1,7 @@
 mod mutator;
 mod homophones;
 
+use axum::{response::Html, routing::get, Router};
 use tracing::{info, Level};
 use tracing_subscriber::FmtSubscriber;
 use std::io::{self, Write};
@@ -8,7 +9,8 @@ use mutator::TextMutator;
 
 /// A program that deliberately introduces minor errors into text for proofreading practice
 
-fn main() -> io::Result<()> {
+#[tokio::main]
+async fn main() -> io::Result<()> {
     // Initialize tracing subscriber
     let subscriber = FmtSubscriber::builder()
         .with_max_level(Level::INFO)
@@ -17,6 +19,18 @@ fn main() -> io::Result<()> {
         .expect("Failed to set tracing subscriber");
 
     info!("Starting text-mutator");
+
+    let app = Router::new().route("/", get(handler));
+
+    let listener = tokio::net::TcpListener::bind("127.0.0.1:8080")
+    .await
+    .unwrap();
+
+    println!("listening on {}", listener.local_addr().unwrap());
+
+    axum::serve(listener, app).await.unwrap();
+
+    return Ok(());
 
     // Set mutation flags
     let swap_letters = true;
@@ -51,4 +65,8 @@ fn main() -> io::Result<()> {
     eprintln!("\n--- Added {} mutations to the text ---", num_mutations);
 
     Ok(())
+}
+
+async fn handler() -> Html<&'static str> {
+    Html("<h1>Hello world!</h1>")
 }

@@ -10,13 +10,13 @@ use axum::{
     routing::{get, post},
 };
 use env::EnvironmentVariables;
-use handler::{fallback, health, mutate};
 use tower_http::cors::CorsLayer;
 use tracing::{Level, info};
 use tracing_subscriber::FmtSubscriber;
 
-/// A program that deliberately introduces minor errors into text for proofreading practice
+const CURRENT_VERSION: usize = 1;
 
+/// A program that deliberately introduces minor errors into text for proofreading practice
 #[tokio::main]
 async fn main() -> anyhow::Result<()> {
     // Initialize tracing subscriber
@@ -35,9 +35,9 @@ async fn main() -> anyhow::Result<()> {
         .allow_methods([Method::POST, Method::GET]);
 
     let app = Router::new()
-        .route("/api/health", get(health))
-        .route("/api/mutate", post(mutate))
-        .fallback(fallback)
+        .route(get_route("health").as_str(), get(handler::health))
+        .route(get_route("mutate").as_str(), post(handler::mutate))
+        .fallback(handler::fallback)
         .layer(cors);
 
     let backend_url = env.backend_url.to_string();
@@ -49,4 +49,9 @@ async fn main() -> anyhow::Result<()> {
     axum::serve(listener, app).await.unwrap();
 
     Ok(())
+}
+
+fn get_route<S: AsRef<str>>(endpoint: S) -> String {
+    let str = endpoint.as_ref();
+    format!("/api/v{CURRENT_VERSION}/{str}")
 }

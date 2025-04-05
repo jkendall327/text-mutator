@@ -96,11 +96,11 @@ impl TextMutator {
                     .filter(|c| c.is_alphabetic() || c == &'\'')
                     .collect();
 
-                if !clean_word.is_empty() {
-                    if self.homophones.find_matching_set(&clean_word).is_some() {
-                        trace!("Found homophone candidate: '{}'", clean_word);
-                        mutations.push(Mutation::ReplaceHomophone(char_index, word.len()));
-                    }
+                if !clean_word.is_empty()
+                    && self.homophones.find_matching_set(&clean_word).is_some()
+                {
+                    trace!("Found homophone candidate: '{}'", clean_word);
+                    mutations.push(Mutation::ReplaceHomophone(char_index, word.len()));
                 }
 
                 char_index += word.len();

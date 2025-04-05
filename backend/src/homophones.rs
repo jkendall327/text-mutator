@@ -1,4 +1,4 @@
-use rand::{Rng, seq::SliceRandom};
+use rand::{seq::IndexedRandom, Rng};
 
 /// Common homophones that can be swapped
 pub(crate) struct HomophoneSets {
@@ -59,7 +59,6 @@ impl HomophoneSets {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use rand::thread_rng;
 
     #[test]
     fn test_find_matching_set_found() {
@@ -88,7 +87,7 @@ mod tests {
     #[test]
     fn test_get_alternative_basic() {
         let hs = HomophoneSets::new();
-        let mut rng = thread_rng();
+        let mut rng = rand::rng();
         let alt = hs.get_alternative("to", &mut rng);
         assert!(alt.is_some());
         let alt_word = alt.unwrap();
@@ -98,7 +97,7 @@ mod tests {
     #[test]
     fn test_get_alternative_case_preserved() {
         let hs = HomophoneSets::new();
-        let mut rng = thread_rng();
+        let mut rng = rand::rng();
         // Test "Your" -> "You're"
         let alt_your = hs.get_alternative("Your", &mut rng);
         assert!(alt_your.is_some());
@@ -115,7 +114,7 @@ mod tests {
     #[test]
     fn test_get_alternative_no_match() {
         let hs = HomophoneSets::new();
-        let mut rng = thread_rng();
+        let mut rng = rand::rng();
         let alt = hs.get_alternative("world", &mut rng);
         assert!(alt.is_none());
     }
@@ -123,7 +122,7 @@ mod tests {
     #[test]
     fn test_get_alternative_single_option() {
         let hs = HomophoneSets::new();
-        let mut rng = thread_rng();
+        let mut rng = rand::rng();
         // Test "affect" -> "effect"
         let alt_affect = hs.get_alternative("affect", &mut rng);
         assert!(alt_affect.is_some());

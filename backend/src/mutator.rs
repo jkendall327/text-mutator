@@ -36,7 +36,7 @@ impl TextMutator {
             }
             None => {
                 debug!("Using entropy-based seed");
-                StdRng::from_entropy()
+                StdRng::from_os_rng()
             }
         };
 

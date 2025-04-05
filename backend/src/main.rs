@@ -1,7 +1,7 @@
+mod handler;
 mod homophones;
 mod models;
 mod mutator;
-mod handler;
 
 use anyhow::bail;
 use axum::{
@@ -42,9 +42,7 @@ async fn main() -> anyhow::Result<()> {
 
     let backend_url = env.backend_url.to_string();
 
-    let listener = tokio::net::TcpListener::bind(backend_url)
-        .await
-        .unwrap();
+    let listener = tokio::net::TcpListener::bind(backend_url).await.unwrap();
 
     println!("listening on {}", listener.local_addr().unwrap());
 

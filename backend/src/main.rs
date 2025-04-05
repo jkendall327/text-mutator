@@ -26,6 +26,27 @@ const CURRENT_VERSION: usize = 1;
 /// A program that deliberately introduces minor errors into text for proofreading practice
 #[tokio::main]
 async fn main() -> anyhow::Result<()> {
+    let env = EnvironmentVariables::from_env()?;
+
+    setup_logging();
+
+    let app = app(&env);
+
+    let backend_url = env.backend_url.to_string();
+
+    let listener = tokio::net::TcpListener::bind(backend_url).await.unwrap();
+
+    tracing::info!("listening on {}", listener.local_addr().unwrap());
+
+    axum::serve(listener, app)
+        .with_graceful_shutdown(shutdown_signal())
+        .await
+        .unwrap();
+
+    Ok(())
+}
+
+fn setup_logging() {
     let file_appender = rolling::daily("logs", "application.log");
     let (non_blocking_appender, _guard) = tracing_appender::non_blocking(file_appender);
 
@@ -45,9 +66,9 @@ async fn main() -> anyhow::Result<()> {
         .init();
 
     tracing::info!("Starting text-mutator");
+}
 
-    let env = EnvironmentVariables::from_env()?;
-
+fn app(env: &EnvironmentVariables) -> Router {
     let cors = CorsLayer::new()
         .allow_origin(env.frontend_url.parse::<HeaderValue>().unwrap())
         .allow_methods([Method::POST, Method::GET]);
@@ -80,18 +101,7 @@ async fn main() -> anyhow::Result<()> {
         .layer(cors)
         .layer(tracer);
 
-    let backend_url = env.backend_url.to_string();
-
-    let listener = tokio::net::TcpListener::bind(backend_url).await.unwrap();
-
-    tracing::info!("listening on {}", listener.local_addr().unwrap());
-
-    axum::serve(listener, app)
-        .with_graceful_shutdown(shutdown_signal())
-        .await
-        .unwrap();
-
-    Ok(())
+    app
 }
 
 fn get_route<S: AsRef<str>>(endpoint: S) -> String {

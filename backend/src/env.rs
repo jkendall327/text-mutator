@@ -9,6 +9,7 @@ pub struct EnvironmentVariables {
 }
 
 impl EnvironmentVariables {
+    #[cfg(test)]
     pub fn empty() -> EnvironmentVariables {
         EnvironmentVariables {
             backend_url: Cow::from(""),

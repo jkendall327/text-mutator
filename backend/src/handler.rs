@@ -20,8 +20,21 @@ pub async fn fallback(uri: Uri) -> (StatusCode, String) {
     )
 }
 
+/// Arbitrary amount, chosen just to prevent degenerate requests.
+const MAX_INPUT_LENGTH: usize = 5000;
+
 #[axum::debug_handler]
 pub async fn mutate(Json(payload): Json<MutationRequest>) -> impl IntoResponse {
+    let length = payload.text.chars().count();
+
+    if length > MAX_INPUT_LENGTH {
+        let error = format!(
+            "The input text was over the max length of {MAX_INPUT_LENGTH} characters ({length})"
+        );
+
+        return (StatusCode::BAD_REQUEST, error).into_response();
+    }
+
     // Set mutation flags
     let swap_letters = payload.config.allow_swaps;
     let remove_punctuation = payload.config.allow_punctuation_removal;
@@ -59,5 +72,5 @@ pub async fn mutate(Json(payload): Json<MutationRequest>) -> impl IntoResponse {
             .collect(),
     };
 
-    Json(response)
+    Json(response).into_response()
 }

@@ -1,13 +1,16 @@
+#[derive(serde::Deserialize)]
 pub struct MutationRequest {
-    text: String,
-    config: MutationOptions,
+    pub text: String,
+    pub config: MutationOptions,
 }
 
+#[derive(serde::Deserialize)]
 pub struct MutationOptions {
-    mutation_rate: f32,
-    allow_swaps: bool,
-    allow_punctuation_removal: bool,
-    allow_homophones: bool,
+    pub mutation_rate: f32,
+    pub allow_swaps: bool,
+    pub allow_punctuation_removal: bool,
+    pub allow_homophones: bool,
+    pub seed: Option<u64>,
 }
 
 #[derive(serde::Serialize)]

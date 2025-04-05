@@ -1,6 +1,6 @@
 mod homophones;
-mod mutator;
 mod models;
+mod mutator;
 
 use axum::{
     Json, Router,
@@ -8,8 +8,8 @@ use axum::{
     response::{Html, IntoResponse},
     routing::{get, post},
 };
-use models::MutationResponse;
-use mutator::{TextMutator};
+use models::{MutationRequest, MutationResponse};
+use mutator::TextMutator;
 use std::io::{self, Write};
 use tower_http::cors::CorsLayer;
 use tracing::{Level, info};
@@ -48,25 +48,31 @@ async fn main() -> io::Result<()> {
     Ok(())
 }
 
-async fn health() -> Html<&'static str> {
-    Html("Healthy")
+async fn health() -> &'static str {
+    "Healthy"
 }
 
-async fn mutate() -> impl IntoResponse {
+#[axum::debug_handler]
+async fn mutate(Json(payload): Json<MutationRequest>) -> impl IntoResponse {
     // Set mutation flags
-    let swap_letters = true;
-    let remove_punctuation = true;
-    let homophones = true;
+    let swap_letters = payload.config.allow_swaps;
+    let remove_punctuation = payload.config.allow_punctuation_removal;
+    let homophones = payload.config.allow_homophones;
 
     // Apply mutations
-    let mut text_mutator =
-        TextMutator::new(1.0, None, swap_letters, remove_punctuation, homophones);
+    let mut text_mutator = TextMutator::new(
+        payload.config.mutation_rate,
+        payload.config.seed,
+        swap_letters,
+        remove_punctuation,
+        homophones,
+    );
 
     let (mutated_text, num_mutations) = text_mutator.mutate("hello world");
 
     let response = MutationResponse {
         mutatedText: mutated_text,
-        mutations: vec![]
+        mutations: vec![],
     };
 
     Json(response)

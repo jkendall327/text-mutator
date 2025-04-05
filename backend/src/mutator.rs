@@ -213,8 +213,6 @@ impl TextMutator {
     }
 }
 
-
-
 #[cfg(test)]
 mod tests {
     use super::*;

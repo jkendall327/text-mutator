@@ -7,7 +7,7 @@ edition = "2024"
 rand = "0.8"
 tracing = "0.1"
 tracing-subscriber = "0.3"
-axum = "0.8.3"
+axum = { version = "0.8.3", features = ["macros"]}
 tokio = { version = "1.0", features = ["full"] }
 tower-http = { version = "0.6.1", features = ["cors"] }
 serde = { version = "1.0", features = ["derive"] }

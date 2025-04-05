@@ -1,7 +1,7 @@
 // Contracts
 
 /// Represents a request to mutate a passage of text.
-#[derive(serde::Deserialize)]
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct MutationRequest {
     /// The passage to mutate.
     pub text: String,
@@ -10,7 +10,7 @@ pub struct MutationRequest {
     pub config: MutationOptions,
 }
 
-#[derive(serde::Deserialize)]
+#[derive(serde::Serialize, serde::Deserialize)]
 pub struct MutationOptions {
     pub mutation_rate: f32,
     pub allow_swaps: bool,

@@ -137,12 +137,18 @@ async fn shutdown_signal() {
 
 #[cfg(test)]
 mod tests {
-    use crate::{app, env::EnvironmentVariables, get_route};
+    use crate::{
+        app,
+        env::EnvironmentVariables,
+        get_route, handler,
+        models::{MutationOptions, MutationRequest},
+    };
     use axum::{
         body::Body,
-        http::{Request, StatusCode},
+        http::{self, Request, StatusCode},
     };
     use http_body_util::BodyExt;
+    use serde_json::json;
     use tower::ServiceExt;
 
     #[tokio::test]
@@ -163,5 +169,56 @@ mod tests {
 
         let body = response.into_body().collect().await.unwrap().to_bytes();
         assert_eq!(&body[..], b"Healthy");
+    }
+
+    #[tokio::test]
+    async fn fake_endpoint_returns_404() {
+        let app = app(&EnvironmentVariables::empty());
+
+        let response = app
+            .oneshot(
+                Request::builder()
+                    .uri(get_route("foobar"))
+                    .body(Body::empty())
+                    .unwrap(),
+            )
+            .await
+            .unwrap();
+
+        assert_eq!(response.status(), StatusCode::NOT_FOUND);
+    }
+
+    #[tokio::test]
+    async fn mutate_returns_error_when_input_is_too_large() {
+        let app = app(&EnvironmentVariables::empty());
+
+        let too_big = handler::MAX_INPUT_LENGTH + 1;
+
+        let invalid_input = "a".repeat(too_big);
+
+        let req = MutationRequest {
+            text: invalid_input,
+            config: MutationOptions {
+                allow_homophones: true,
+                allow_punctuation_removal: true,
+                allow_swaps: true,
+                mutation_rate: 1.0,
+                seed: None,
+            },
+        };
+
+        let response = app
+            .oneshot(
+                Request::builder()
+                    .method(http::Method::POST)
+                    .header(http::header::CONTENT_TYPE, mime::APPLICATION_JSON.as_ref())
+                    .uri(get_route("mutate"))
+                    .body(Body::from(serde_json::to_vec(&json!(req)).unwrap()))
+                    .unwrap(),
+            )
+            .await
+            .unwrap();
+
+        assert_eq!(response.status(), StatusCode::BAD_REQUEST);
     }
 }

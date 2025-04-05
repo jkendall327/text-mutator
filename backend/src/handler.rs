@@ -21,7 +21,7 @@ pub async fn fallback(uri: Uri) -> (StatusCode, String) {
 }
 
 /// Arbitrary amount, chosen just to prevent degenerate requests.
-const MAX_INPUT_LENGTH: usize = 5000;
+pub const MAX_INPUT_LENGTH: usize = 5000;
 
 #[axum::debug_handler]
 pub async fn mutate(Json(payload): Json<MutationRequest>) -> impl IntoResponse {

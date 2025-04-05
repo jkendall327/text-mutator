@@ -4,7 +4,7 @@ mod mutator;
 use axum::{
     http::{HeaderValue, Method}, response::{Html, IntoResponse}, routing::{get, post}, Json, Router
 };
-use mutator::TextMutator;
+use mutator::{Mutation, TextMutator};
 use std::io::{self, Write};
 use tower_http::cors::CorsLayer;
 use tracing::{Level, info};
@@ -79,4 +79,27 @@ async fn health() -> Html<&'static str> {
 
 async fn mutate() -> impl IntoResponse {
     Json(vec!["Hello", "World"])
+}
+
+pub struct MutationRequest {
+    text: String,
+    config: MutationOptions
+}
+
+pub struct MutationOptions {
+    mutation_rate: f32,
+    allow_swaps: bool,
+    allow_punctuation_removal: bool,
+    allow_homophones: bool
+}
+
+pub struct MutationResponse {
+    mutatedText: String,
+    mutations: Vec<MutationItem>
+}
+
+pub struct MutationItem {
+    start: usize,
+    end: usize,
+    r#type: Mutation
 }

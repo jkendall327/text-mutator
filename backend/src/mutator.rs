@@ -1,14 +1,14 @@
-use rand::{seq::SliceRandom, SeedableRng};
 use rand::rngs::StdRng;
+use rand::{SeedableRng, seq::SliceRandom};
 use tracing::{debug, info, trace};
 
 use crate::homophones::HomophoneSets;
 
 /// A mutation that can be applied to text
 enum Mutation {
-    SwapLetters(usize),              // Swap with next letter
-    RemovePunctuation(usize),        // Remove punctuation at index
-    ReplaceHomophone(usize, usize),  // Replace word at index with length
+    SwapLetters(usize),             // Swap with next letter
+    RemovePunctuation(usize),       // Remove punctuation at index
+    ReplaceHomophone(usize, usize), // Replace word at index with length
 }
 
 #[cfg(test)]
@@ -58,10 +58,10 @@ mod tests {
         // Using a fixed seed should give deterministic results
         let mut mutator1 = TextMutator::new(1.0, Some(42), true, true, false);
         let (result1, count1) = mutator1.mutate("Hello, world!");
-        
+
         let mut mutator2 = TextMutator::new(1.0, Some(42), true, true, false);
         let (result2, count2) = mutator2.mutate("Hello, world!");
-        
+
         assert_eq!(result1, result2);
         assert_eq!(count1, count2);
     }
@@ -81,8 +81,13 @@ mod tests {
         assert_ne!(result, "Hello, world!");
         assert!(count > 0);
         // The result should have fewer punctuation marks
-        assert!(result.chars().filter(|c| c.is_ascii_punctuation()).count() < 
-               "Hello, world!".chars().filter(|c| c.is_ascii_punctuation()).count());
+        assert!(
+            result.chars().filter(|c| c.is_ascii_punctuation()).count()
+                < "Hello, world!"
+                    .chars()
+                    .filter(|c| c.is_ascii_punctuation())
+                    .count()
+        );
     }
 
     #[test]
@@ -96,14 +101,17 @@ mod tests {
     #[test]
     fn test_mutation_rate_scaling() {
         let text = "The quick brown fox jumps over the lazy dog.";
-        
+
         let mut low_rate_mutator = TextMutator::new(0.1, Some(42), true, true, true);
         let (_, low_count) = low_rate_mutator.mutate(text);
-        
+
         let mut high_rate_mutator = TextMutator::new(0.9, Some(42), true, true, true);
         let (_, high_count) = high_rate_mutator.mutate(text);
-        
-        assert!(high_count > low_count, "Higher mutation rate should produce more mutations");
+
+        assert!(
+            high_count > low_count,
+            "Higher mutation rate should produce more mutations"
+        );
     }
 }
 
@@ -123,21 +131,23 @@ impl TextMutator {
         seed: Option<u64>,
         swap_letters: bool,
         remove_punctuation: bool,
-        homophones: bool) -> Self {
-
+        homophones: bool,
+    ) -> Self {
         info!("Creating TextMutator with mutation_rate={}", mutation_rate);
-        debug!("Mutation flags: swap_letters={}, remove_punctuation={}, homophones={}", 
-               swap_letters, remove_punctuation, homophones);
+        debug!(
+            "Mutation flags: swap_letters={}, remove_punctuation={}, homophones={}",
+            swap_letters, remove_punctuation, homophones
+        );
 
         let rng = match seed {
             Some(seed_val) => {
                 debug!("Using provided seed: {}", seed_val);
                 StdRng::seed_from_u64(seed_val)
-            },
+            }
             None => {
                 debug!("Using entropy-based seed");
                 StdRng::from_entropy()
-            },
+            }
         };
 
         TextMutator {
@@ -151,7 +161,10 @@ impl TextMutator {
     }
 
     fn find_possible_mutations(&self, text: &str) -> Vec<Mutation> {
-        trace!("Finding possible mutations in text of length {}", text.len());
+        trace!(
+            "Finding possible mutations in text of length {}",
+            text.len()
+        );
         let mut mutations = Vec::new();
         let chars: Vec<char> = text.chars().collect();
 
@@ -159,7 +172,7 @@ impl TextMutator {
         if self.swap_letters {
             trace!("Looking for possible letter swaps");
             for i in 0..chars.len().saturating_sub(1) {
-                if chars[i].is_alphabetic() && chars[i+1].is_alphabetic() {
+                if chars[i].is_alphabetic() && chars[i + 1].is_alphabetic() {
                     mutations.push(Mutation::SwapLetters(i));
                 }
             }
@@ -188,7 +201,8 @@ impl TextMutator {
                 }
 
                 // Strip punctuation from word for homophone lookup
-                let clean_word: String = word.chars()
+                let clean_word: String = word
+                    .chars()
                     .filter(|c| c.is_alphabetic() || c == &'\'')
                     .collect();
 
@@ -211,7 +225,11 @@ impl TextMutator {
         info!("Mutating text of length {}", text.len());
         let possible_mutations = self.find_possible_mutations(text);
         let num_mutations = (possible_mutations.len() as f32 * self.mutation_rate) as usize;
-        debug!("Planning to apply {} mutations out of {} possible", num_mutations, possible_mutations.len());
+        debug!(
+            "Planning to apply {} mutations out of {} possible",
+            num_mutations,
+            possible_mutations.len()
+        );
 
         if possible_mutations.is_empty() || num_mutations == 0 {
             info!("No mutations to apply");
@@ -237,7 +255,7 @@ impl TextMutator {
                 Mutation::ReplaceHomophone(i, _) => *i,
             };
 
-            pos_b.cmp(&pos_a)  // Reverse order
+            pos_b.cmp(&pos_a) // Reverse order
         });
 
         // Apply mutations
@@ -250,13 +268,18 @@ impl TextMutator {
                 Mutation::SwapLetters(i) => {
                     let mut chars: Vec<char> = result.chars().collect();
                     if i + 1 < chars.len() {
-                        trace!("Swapping letters at positions {} and {}: '{}' and '{}'", 
-                               i, i+1, chars[i], chars[i+1]);
+                        trace!(
+                            "Swapping letters at positions {} and {}: '{}' and '{}'",
+                            i,
+                            i + 1,
+                            chars[i],
+                            chars[i + 1]
+                        );
                         chars.swap(i, i + 1);
                         result = chars.into_iter().collect();
                         actual_mutations += 1;
                     }
-                },
+                }
                 Mutation::RemovePunctuation(i) => {
                     let mut chars: Vec<char> = result.chars().collect();
                     if i < chars.len() && chars[i].is_ascii_punctuation() {
@@ -265,24 +288,29 @@ impl TextMutator {
                         result = chars.into_iter().collect();
                         actual_mutations += 1;
                     }
-                },
+                }
                 Mutation::ReplaceHomophone(i, len) => {
                     if i + len <= result.len() {
-                        let word = &result[i..i+len];
-                        let clean_word: String = word.chars()
+                        let word = &result[i..i + len];
+                        let clean_word: String = word
+                            .chars()
                             .filter(|c| c.is_alphabetic() || c == &'\'')
                             .collect();
 
-                        if let Some(alternative) = self.homophones.get_alternative(&clean_word, &mut self.rng) {
-                            trace!("Replacing homophone '{}' with '{}'", clean_word, alternative);
-                            
+                        if let Some(alternative) =
+                            self.homophones.get_alternative(&clean_word, &mut self.rng)
+                        {
+                            trace!(
+                                "Replacing homophone '{}' with '{}'",
+                                clean_word, alternative
+                            );
+
                             // Preserve trailing punctuation if any
-                            let trailing_punct: String = word.chars()
-                                .filter(|c| c.is_ascii_punctuation())
-                                .collect();
+                            let trailing_punct: String =
+                                word.chars().filter(|c| c.is_ascii_punctuation()).collect();
 
                             let replacement = alternative + &trailing_punct;
-                            result = result[..i].to_string() + &replacement + &result[i+len..];
+                            result = result[..i].to_string() + &replacement + &result[i + len..];
                             actual_mutations += 1;
                         }
                     }

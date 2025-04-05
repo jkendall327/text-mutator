@@ -1,4 +1,4 @@
-use rand::{seq::SliceRandom, Rng};
+use rand::{Rng, seq::SliceRandom};
 
 /// Common homophones that can be swapped
 pub(crate) struct HomophoneSets {
@@ -20,17 +20,20 @@ impl HomophoneSets {
                 vec!["which", "witch"],
                 vec!["were", "we're", "where"],
                 vec!["lose", "loose"],
-            ]
+            ],
         }
     }
 
     pub(crate) fn find_matching_set(&self, word: &str) -> Option<&Vec<&'static str>> {
-        self.sets.iter().find(|set| set.contains(&word.to_lowercase().as_str()))
+        self.sets
+            .iter()
+            .find(|set| set.contains(&word.to_lowercase().as_str()))
     }
 
     pub(crate) fn get_alternative<R: Rng>(&self, word: &str, rng: &mut R) -> Option<String> {
         if let Some(set) = self.find_matching_set(word) {
-            let alternatives: Vec<&&str> = set.iter()
+            let alternatives: Vec<&&str> = set
+                .iter()
                 .filter(|&&w| w.to_lowercase() != word.to_lowercase())
                 .collect();
 
@@ -92,7 +95,7 @@ mod tests {
         assert!(alt_word == "too" || alt_word == "two");
     }
 
-     #[test]
+    #[test]
     fn test_get_alternative_case_preserved() {
         let hs = HomophoneSets::new();
         let mut rng = thread_rng();
@@ -117,7 +120,7 @@ mod tests {
         assert!(alt.is_none());
     }
 
-     #[test]
+    #[test]
     fn test_get_alternative_single_option() {
         let hs = HomophoneSets::new();
         let mut rng = thread_rng();

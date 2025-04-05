@@ -13,14 +13,25 @@ pub struct MutationOptions {
     pub seed: Option<u64>,
 }
 
-#[derive(serde::Serialize)]
 pub struct MutationResponse {
-    pub mutatedText: String,
-    pub mutations: Vec<MutationItem>,
+    pub mutated_text: String,
+    pub mutations: Vec<MutationItemDto>,
+}
+
+pub struct MutationItem {
+    start: usize,
+    end: usize,
+    r#type: Mutation,
 }
 
 #[derive(serde::Serialize)]
-pub struct MutationItem {
+pub struct MutationResponseDto {
+    pub mutatedText: String,
+    pub mutations: Vec<MutationItemDto>,
+}
+
+#[derive(serde::Serialize)]
+pub struct MutationItemDto {
     start: usize,
     end: usize,
     r#type: Mutation,

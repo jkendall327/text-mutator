@@ -1,5 +1,6 @@
 mod homophones;
 mod mutator;
+mod models;
 
 use axum::{
     Json, Router,
@@ -7,7 +8,8 @@ use axum::{
     response::{Html, IntoResponse},
     routing::{get, post},
 };
-use mutator::{Mutation, TextMutator};
+use models::MutationResponse;
+use mutator::{TextMutator};
 use std::io::{self, Write};
 use tower_http::cors::CorsLayer;
 use tracing::{Level, info};
@@ -68,29 +70,4 @@ async fn mutate() -> impl IntoResponse {
     };
 
     Json(response)
-}
-
-pub struct MutationRequest {
-    text: String,
-    config: MutationOptions,
-}
-
-pub struct MutationOptions {
-    mutation_rate: f32,
-    allow_swaps: bool,
-    allow_punctuation_removal: bool,
-    allow_homophones: bool,
-}
-
-#[derive(serde::Serialize)]
-pub struct MutationResponse {
-    mutatedText: String,
-    mutations: Vec<MutationItem>,
-}
-
-#[derive(serde::Serialize)]
-pub struct MutationItem {
-    start: usize,
-    end: usize,
-    r#type: Mutation,
 }

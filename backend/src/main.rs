@@ -10,6 +10,7 @@ use axum::{
     routing::{get, post},
 };
 use env::EnvironmentVariables;
+use tokio::signal;
 use tower_http::cors::CorsLayer;
 use tracing_appender::rolling;
 use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt};
@@ -57,7 +58,10 @@ async fn main() -> anyhow::Result<()> {
 
     tracing::info!("listening on {}", listener.local_addr().unwrap());
 
-    axum::serve(listener, app).await.unwrap();
+    axum::serve(listener, app)
+        .with_graceful_shutdown(shutdown_signal())
+        .await
+        .unwrap();
 
     Ok(())
 }
@@ -65,4 +69,30 @@ async fn main() -> anyhow::Result<()> {
 fn get_route<S: AsRef<str>>(endpoint: S) -> String {
     let str = endpoint.as_ref();
     format!("/api/v{CURRENT_VERSION}/{str}")
+}
+
+async fn shutdown_signal() {
+    let ctrl_c = async {
+        signal::ctrl_c()
+            .await
+            .expect("failed to install Ctrl+C handler");
+    };
+
+    #[cfg(unix)]
+    let terminate = async {
+        signal::unix::signal(signal::unix::SignalKind::terminate())
+            .expect("failed to install signal handler")
+            .recv()
+            .await;
+    };
+
+    #[cfg(not(unix))]
+    let terminate = std::future::pending::<()>();
+
+    tokio::select! {
+        () = ctrl_c => {
+            tracing::info!("App shutting down...");
+        },
+        () = terminate => {},
+    }
 }

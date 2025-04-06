@@ -5,6 +5,7 @@ param location string = deployment().location
 param environment string = 'dev'
 param appName string = 'text-mutator'
 param rgName string
+param imageName string
 
 @description('Create a resource group')
 resource rg 'Microsoft.Resources/resourceGroups@2024-03-01' = {
@@ -29,12 +30,19 @@ module swa 'br/public:avm/res/web/static-site:0.3.0' = {
   }
 }
 
+module registry 'modules/acr.bicep' = {
+  scope: rg
+}
+
 module backend 'modules/backend.bicep' = {
   name: 'backend'
   scope: rg
   params: {
     appName: appName
     environment: environment
+    imageName: imageName
+    registryName: registry.outputs.registryName
+    managedIdentityId: registry.outputs.registryIdentityId
   }
 }
 

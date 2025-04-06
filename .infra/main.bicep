@@ -64,7 +64,7 @@ var acrPullRoleDefinitionId = subscriptionResourceId(
 )
 
 resource assignAcrPullRole 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
-  name: 'role-${uniqueString(rg.id)}'
+  name: guid(registry.name, backend.name, acrPullRoleDefinitionId)
   properties: {
     roleDefinitionId: acrPullRoleDefinitionId
     principalId: backend.outputs.appServicePrincipalId

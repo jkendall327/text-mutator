@@ -27,3 +27,6 @@ resource appService 'Microsoft.Web/sites@2020-06-01' = {
     }
   }
 }
+
+@description('Output the resource ID of the backend app service instance')
+output backendResourceId string = appService.id

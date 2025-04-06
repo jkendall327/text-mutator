@@ -65,14 +65,14 @@ var acrPullRoleDefinitionId = subscriptionResourceId(
   '7f951dda-4ed3-4680-a7ca-43fe172d538d'
 )
 
-resource assignAcrPullRole 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
-  name: guid(registry.name, backend.name, acrPullRoleDefinitionId)
-  properties: {
-    roleDefinitionId: acrPullRoleDefinitionId
-    principalId: backend.outputs.appServicePrincipalId
-    principalType: 'ServicePrincipal'
-  }
-}
+// resource assignAcrPullRole 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
+//   name: guid(registry.name, backend.name, acrPullRoleDefinitionId)
+//   properties: {
+//     roleDefinitionId: acrPullRoleDefinitionId
+//     principalId: backend.outputs.appServicePrincipalId
+//     principalType: 'ServicePrincipal'
+//   }
+// }
 
 module identity 'modules/identity.bicep' = {
   scope: rg

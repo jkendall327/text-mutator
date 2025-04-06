@@ -11,12 +11,9 @@ param location string = resourceGroup().location
 @description('Provide a tier of your Azure Container Registry.')
 param acrSku string = 'Basic'
 
-resource acrResource 'Microsoft.ContainerRegistry/registries@2023-01-01-preview' = {
+resource acr 'Microsoft.ContainerRegistry/registries@2023-01-01-preview' = {
   name: acrName
   location: location
-  identity: {
-    type: 'SystemAssigned'
-  }
   sku: {
     name: acrSku
   }
@@ -25,11 +22,11 @@ resource acrResource 'Microsoft.ContainerRegistry/registries@2023-01-01-preview'
   }
 }
 
-@description('Output the login server property for later use')
-output loginServer string = acrResource.properties.loginServer
-
-@description('The ID of the system-assigned managed identity for the registry')
-output registryIdentityId string = acrResource.identity.principalId
+@description('Output the login server endpoint of the registry.')
+output loginServer string = acr.properties.loginServer
 
 @description('The name of the registry')
-output registryName string = 'foo'
+output registryName string = acr.name
+
+@description('The resource ID of the registry')
+output registryResourceId string = acr.id

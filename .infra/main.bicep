@@ -41,8 +41,7 @@ module backend 'modules/backend.bicep' = {
     appName: appName
     environment: environment
     imageName: imageName
-    registryName: registry.outputs.registryName
-    managedIdentityId: registry.outputs.registryIdentityId
+    registryLoginServer: registry.outputs.loginServer
   }
 }
 
@@ -55,6 +54,21 @@ module link 'modules/link.bicep' = {
     location: location
     staticWebAppName: swa.outputs.name
     backendAppResourceId: backend.outputs.backendResourceId
+  }
+}
+
+// Built-in role definition ID for AcrPull
+var acrPullRoleDefinitionId = subscriptionResourceId(
+  'Microsoft.Authorization/roleDefinitions',
+  '7f951dda-4ed3-4680-a7ca-43fe172d538d'
+)
+
+resource assignAcrPullRole 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
+  name: 'role-${uniqueString(rg.id)}'
+  properties: {
+    roleDefinitionId: acrPullRoleDefinitionId
+    principalId: backend.outputs.appServicePrincipalId
+    principalType: 'ServicePrincipal'
   }
 }
 

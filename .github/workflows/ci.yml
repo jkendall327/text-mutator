@@ -102,11 +102,19 @@ jobs:
           username: ${{ secrets.ACR_USERNAME }}
           password: ${{ secrets.ACR_PASSWORD }}
 
-      - name: Push Docker image
-        run: |
-          docker build ./backend -f ./backend/Dockerfile -t ${{ steps.bicep.outputs.acrLoginServer }}/${{ steps.image.outputs.imageName }}:${{ github.sha }} -t ${{ steps.bicep.outputs.acrLoginServer }}/${{ steps.image.outputs.imageName }}:latest
-          docker push ${{ steps.bicep.outputs.acrLoginServer }}/${{ steps.image.outputs.imageName }}:${{ github.sha }}
-          docker push ${{ steps.bicep.outputs.acrLoginServer }}/${{ steps.image.outputs.imageName }}:latest
+      - name: Build & Push
+        uses: docker/build-push-action@v2
+        with:
+          push: true
+          build-args: |
+            version=${{ github.sha }}
+          tags: ${{ steps.bicep.outputs.acrLoginServer }}/${{ steps.image.outputs.imageName }}:${{ github.sha }}
+
+      # - name: Push Docker image
+      #   run: |
+      #     docker build ./backend -f ./backend/Dockerfile -t ${{ steps.bicep.outputs.acrLoginServer }}/${{ steps.image.outputs.imageName }}:${{ github.sha }} -t ${{ steps.bicep.outputs.acrLoginServer }}/${{ steps.image.outputs.imageName }}:latest
+      #     docker push ${{ steps.bicep.outputs.acrLoginServer }}/${{ steps.image.outputs.imageName }}:${{ github.sha }}
+      #     docker push ${{ steps.bicep.outputs.acrLoginServer }}/${{ steps.image.outputs.imageName }}:latest
 
       - name: Update App Server image
         uses: azure/CLI@v1

@@ -54,3 +54,39 @@ jobs:
           # TODO
           # Push the rust image to ACR
           # Push the frontend to Azure static apps
+
+          # https://docs.github.com/en/actions/use-cases-and-examples/deploying/deploying-to-azure-static-web-app
+
+          # - name: Build And Deploy
+          # uses: Azure/static-web-apps-deploy@1a947af9992250f3bc2e68ad0754c0b0c11566c9
+          # with:
+          #   azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN }}
+          #   repo_token: ${{ secrets.GITHUB_TOKEN }}
+          #   action: "upload"
+          #   app_location: ${{ env.APP_LOCATION }}
+          #   api_location: ${{ env.API_LOCATION }}
+          #   output_location: ${{ env.OUTPUT_LOCATION }}
+
+          # https://learn.microsoft.com/en-us/azure/container-instances/container-instances-github-action
+
+        #   - name: 'Build and push image'
+        #   uses: azure/docker-login@v1
+        #   with:
+        #     login-server: ${{ secrets.REGISTRY_LOGIN_SERVER }}
+        #     username: ${{ secrets.REGISTRY_USERNAME }}
+        #     password: ${{ secrets.REGISTRY_PASSWORD }}
+        # - run: |
+        #     docker build . -t ${{ secrets.REGISTRY_LOGIN_SERVER }}/sampleapp:${{ github.sha }}
+        #     docker push ${{ secrets.REGISTRY_LOGIN_SERVER }}/sampleapp:${{ github.sha }}
+
+        # - name: 'Deploy to Azure Container Instances'
+        #   uses: 'azure/aci-deploy@v1'
+        #   with:
+        #     resource-group: ${{ secrets.RESOURCE_GROUP }}
+        #     dns-name-label: ${{ secrets.RESOURCE_GROUP }}${{ github.run_number }}
+        #     image: ${{ secrets.REGISTRY_LOGIN_SERVER }}/sampleapp:${{ github.sha }}
+        #     registry-login-server: ${{ secrets.REGISTRY_LOGIN_SERVER }}
+        #     registry-username: ${{ secrets.REGISTRY_USERNAME }}
+        #     registry-password: ${{ secrets.REGISTRY_PASSWORD }}
+        #     name: aci-sampleapp
+        #     location: 'west us'

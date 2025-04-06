@@ -18,14 +18,14 @@ resource rg 'Microsoft.Resources/resourceGroups@2024-03-01' = {
 }
 
 var resourceToken = uniqueString(rg.id)
-var swaName = 'stapp-${appName}-${environment}-${location}-${resourceToken}'
+var swaName = 'sta-${appName}-${environment}-${resourceToken}'
 
 @description('Create a static web app')
 module swa 'br/public:avm/res/web/static-site:0.3.0' = {
   name: swaName
   scope: rg
   params: {
-    name: 'sta-${appName}-${environment}-${resourceToken}'
+    name: swaName
     location: location
     sku: 'Standard'
   }
@@ -46,19 +46,17 @@ module backend 'modules/backend.bicep' = {
   }
 }
 
-// swaName:
-
-// module link 'modules/link.bicep' = {
-//   name: 'link'
-//   scope: rg
-//   params: {
-//     appName: appName
-//     environment: environment
-//     location: location
-//     staticWebAppName: swaName
-//     backendAppResourceId: backend.outputs.backendResourceId
-//   }
-// }
+module link 'modules/link.bicep' = {
+  name: 'link'
+  scope: rg
+  params: {
+    appName: appName
+    environment: environment
+    location: location
+    staticWebAppName: swaName
+    backendAppResourceId: backend.outputs.backendResourceId
+  }
+}
 
 // Built-in role definition ID for AcrPull
 var acrPullRoleDefinitionId = subscriptionResourceId(

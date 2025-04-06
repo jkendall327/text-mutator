@@ -1,18 +1,12 @@
 // https://learn.microsoft.com/en-us/azure/container-registry/container-registry-get-started-bicep?tabs=CLI
 
-@description('The deployment environment')
-param environment string = 'dev'
-
-@description('The semantic app name')
-param appName string
-
 @description('Provide a location for the registry.')
 param location string = resourceGroup().location
 
 @minLength(5)
 @maxLength(50)
 @description('Provide a globally unique name of your Azure Container Registry')
-param acrName string = 'acr-${appName}-${environment}-${location}-${uniqueString(resourceGroup().id)}'
+param acrName string = 'acr${uniqueString(resourceGroup().id)}'
 
 @description('Provide a tier of your Azure Container Registry.')
 param acrSku string = 'Basic'

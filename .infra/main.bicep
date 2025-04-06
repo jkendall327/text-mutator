@@ -25,7 +25,7 @@ module swa 'br/public:avm/res/web/static-site:0.3.0' = {
   name: swaName
   scope: rg
   params: {
-    name: '${appName}-${environment}-${location}-${resourceToken}'
+    name: 'sta-${appName}-${environment}-${resourceToken}'
     location: location
     sku: 'Standard'
   }
@@ -33,9 +33,6 @@ module swa 'br/public:avm/res/web/static-site:0.3.0' = {
 
 module registry 'modules/acr.bicep' = {
   scope: rg
-  params: {
-    appName: appName
-  }
 }
 
 module backend 'modules/backend.bicep' = {

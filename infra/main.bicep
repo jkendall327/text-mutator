@@ -4,6 +4,8 @@ targetScope = 'subscription'
 param location string = deployment().location
 param environmentName string = 'dev'
 param appName string = 'text-mutator'
+param publisherName string
+param publisherEmail string
 
 var rgName = 'rg-${appName}-${environmentName}'
 
@@ -43,17 +45,14 @@ output staticWebAppName string = swa.outputs.name
 module backend 'modules/backend.bicep' = {
   name: 'foobar'
   scope: rg
-  params: {
-    appServicePlanName: ''
-    location: location
-  }
+  params: {}
 }
 
 module api 'modules/api.bicep' = {
   name: 'api'
   scope: rg
   params: {
-    publisherEmail: 'foo'
-    publisherName: 'foo'
+    publisherEmail: publisherEmail
+    publisherName: publisherName
   }
 }

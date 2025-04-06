@@ -105,10 +105,11 @@ jobs:
       - name: Build & Push
         uses: docker/build-push-action@v2
         with:
+          context: backend/
           push: true
           build-args: |
             version=${{ github.sha }}
-          tags: ${{ steps.bicep.outputs.acrLoginServer }}/${{ steps.image.outputs.imageName }}:${{ github.sha }}
+          tags: ${{ steps.bicep.outputs.acrLoginServer }}/${{ steps.image.outputs.imageName }}:${{ github.sha }},${{ steps.bicep.outputs.acrLoginServer }}/${{ steps.image.outputs.imageName }}:latest
 
       # - name: Push Docker image
       #   run: |

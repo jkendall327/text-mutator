@@ -15,7 +15,7 @@ resource rg 'Microsoft.Resources/resourceGroups@2024-03-01' = {
   }
 }
 
-var resourceToken = uniqueString(subscription().subscriptionId, location)
+var resourceToken = uniqueString(rg.id)
 var swaName = 'stapp-${appName}-${environment}-${location}-${resourceToken}'
 
 @description('Create a static web app')

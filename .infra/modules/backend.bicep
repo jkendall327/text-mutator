@@ -7,6 +7,15 @@ param appName string
 @description('The deployment location')
 param location string = resourceGroup().location
 
+@description('The name of the managed identity to use to talk to ACR')
+param managedIdentityId string
+
+@description('The name of the ACR registry instance')
+param registryName string
+
+@description('The name of the Docker image to use for the backend')
+param imageName string
+
 var servicePlanName = toLower('asp-${appName}-${environment}-${location}')
 var serviceName = toLower('as-${appName}-${environment}-${location}-${uniqueString(resourceGroup().id)}')
 
@@ -30,10 +39,19 @@ resource appServicePlan 'Microsoft.Web/serverfarms@2020-12-01' = {
 resource appService 'Microsoft.Web/sites@2020-06-01' = {
   name: serviceName
   location: location
+  identity: {
+    type: 'UserAssigned'
+    userAssignedIdentities: {
+      '${managedIdentityId}': {}
+    }
+  }
   properties: {
     serverFarmId: appServicePlan.id
     siteConfig: {
-      linuxFxVersion: 'node|14-lts'
+      acrUseManagedIdentityCreds: true
+      acrUserManagedIdentityID: managedIdentityId
+      appSettings: []
+      linuxFxVersion: 'DOCKER|${registryName}.azurecr.io:${imageName}:latest'
     }
   }
   tags: {

@@ -71,6 +71,7 @@ jobs:
       - name: Deploy via Bicep
         uses: Azure/bicep-deploy@v2.1.0
         with:
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
           # Specifies the execution type, which can be either 'deployment' or 'deploymentStack'.
           type: "deploymentStack"
           # Specifies the operation to perform. For deployment, choose from 'create', 'validate', 'whatIf'. For deploymentStack, choose from 'create', 'delete', 'validate'.

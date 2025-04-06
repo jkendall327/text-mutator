@@ -79,7 +79,7 @@ jobs:
           operation: "create"
           name: "Development"
           location: "westeurope"
-          scope: "subscription"
+          scope: "resourceGroup"
           template-file: .infra/main.bicep
           parameters-file: .infra/parameters.bicepparam
           action-on-unmanage-resources: delete

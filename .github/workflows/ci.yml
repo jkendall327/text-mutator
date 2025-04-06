@@ -75,7 +75,7 @@ jobs:
         uses: Azure/bicep-deploy@v2.1.0
         with:
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-          type: "deploymentStack"
+          type: "deployment"
           operation: "create"
           name: "Development"
           location: "westeurope"

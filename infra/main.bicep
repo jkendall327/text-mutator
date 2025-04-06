@@ -7,7 +7,7 @@ param appName string = 'text-mutator'
 param publisherName string
 param publisherEmail string
 
-var rgName = 'rg-${appName}-${environmentName}'
+param rgName string
 
 @description('String to make resource names unique')
 var resourceToken = uniqueString(subscription().subscriptionId, location)

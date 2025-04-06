@@ -5,6 +5,7 @@ targetScope = 'subscription'
 param location string = deployment().location
 param environment string = 'dev'
 param appName string = 'text-mutator'
+param managedIdentityName string
 param rgName string
 param imageName string
 
@@ -73,6 +74,11 @@ resource assignAcrPullRole 'Microsoft.Authorization/roleAssignments@2022-04-01' 
   }
 }
 
+module identity 'modules/identity.bicep' = {
+  scope: rg
+  params: { managedIdentityName: managedIdentityName }
+}
+
 @description('Output the default hostname')
 output endpoint string = swa.outputs.defaultHostname
 
@@ -81,3 +87,7 @@ output staticWebAppName string = swa.outputs.name
 
 @description('Output the name of the resource group')
 output rgName string = rg.name
+
+output identityClientId string = identity.outputs.managedIdentityClientId
+output identityPrincipalId string = identity.outputs.managedIdentityPrincipalId
+output identityResourceId string = identity.outputs.managedIdentityResourceId

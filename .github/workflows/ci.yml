@@ -20,7 +20,7 @@ on:
 env:
   CARGO_TERM_COLOR: always
   APP_LOCATION: "/frontend" # frontend client code
-  OUTPUT_LOCATION: "/frontend/dist" # frontend client code build output
+  OUTPUT_LOCATION: "dist" # frontend client code build output
 
 permissions:
   id-token: write

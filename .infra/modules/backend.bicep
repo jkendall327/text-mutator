@@ -45,6 +45,7 @@ resource appService 'Microsoft.Web/sites@2020-06-01' = {
   properties: {
     serverFarmId: appServicePlan.id
     siteConfig: {
+      alwaysOn: true
       acrUseManagedIdentityCreds: true
       linuxFxVersion: 'DOCKER|${registryLoginServer}.azurecr.io:${imageName}:latest'
       appSettings: [

@@ -46,5 +46,7 @@ jobs:
     needs: [frontend, backend]
 
     steps:
-      - name: Placeholder
-        run: echo 'Deploy to Azure'
+      - name: Log in to Azure
+        uses: Azure/login@v2.3.0
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}

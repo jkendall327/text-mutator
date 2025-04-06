@@ -2,34 +2,51 @@
 targetScope = 'subscription'
 
 param location string = deployment().location
-param environmentName string = 'dev'
+param environment string = 'dev'
 param appName string = 'text-mutator'
-
 param rgName string
-
-@description('String to make resource names unique')
-var resourceToken = uniqueString(subscription().subscriptionId, location)
 
 @description('Create a resource group')
 resource rg 'Microsoft.Resources/resourceGroups@2024-03-01' = {
   name: rgName
   location: location
   tags: {
-    environment: environmentName
     application: appName
   }
 }
 
-output rgName string = rg.name
+var resourceToken = uniqueString(subscription().subscriptionId, location)
+var swaName = 'stapp-${appName}-${environment}-${location}-${resourceToken}'
 
 @description('Create a static web app')
 module swa 'br/public:avm/res/web/static-site:0.3.0' = {
-  name: '${deployment().name}-${appName}-webapp'
+  name: swaName
   scope: rg
   params: {
-    name: 'swa-${resourceToken}'
+    name: 'stapp-${resourceToken}'
     location: location
     sku: 'Free'
+  }
+}
+
+module backend 'modules/backend.bicep' = {
+  name: 'backend'
+  scope: rg
+  params: {
+    appName: appName
+    environment: environment
+  }
+}
+
+module link 'modules/link.bicep' = {
+  name: 'link'
+  scope: rg
+  params: {
+    appName: appName
+    environment: environment
+    location: location
+    staticWebAppName: swa.outputs.name
+    backendAppResourceId: backend.outputs.backendResourceId
   }
 }
 
@@ -39,18 +56,5 @@ output endpoint string = swa.outputs.defaultHostname
 @description('Output the static web app name')
 output staticWebAppName string = swa.outputs.name
 
-// Web App for Containers (backend)
-module backend 'modules/backend.bicep' = {
-  name: 'foobar'
-  scope: rg
-  params: {}
-}
-
-module api 'modules/link.bicep' = {
-  name: 'link'
-  scope: rg
-  params: {
-    staticWebAppName: swa.outputs.name
-    backendAppResourceId: backend.outputs.backendResourceId
-  }
-}
+@description('Output the name of the resource group')
+output rgName string = rg.name

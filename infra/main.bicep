@@ -1,4 +1,4 @@
-// Resource group
+// az deployment sub what-if --location westeurope --template-file main.bicep --parameters parameters.bicepparam
 targetScope = 'subscription'
 
 param location string = deployment().location

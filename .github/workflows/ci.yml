@@ -61,6 +61,9 @@ jobs:
     needs: [frontend, backend]
 
     steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
       - name: Log in to Azure
         uses: azure/login@v2
         with:

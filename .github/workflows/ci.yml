@@ -72,24 +72,16 @@ jobs:
         uses: Azure/bicep-deploy@v2.1.0
         with:
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-          # Specifies the execution type, which can be either 'deployment' or 'deploymentStack'.
           type: "deploymentStack"
-          # Specifies the operation to perform. For deployment, choose from 'create', 'validate', 'whatIf'. For deploymentStack, choose from 'create', 'delete', 'validate'.
           operation: "create"
-          # Specifies the name of the deployment or deploymentStack.
-          name:
-          # Specifies the location of the deployment or deploymentStack. Must be provided if the 'scope' parameter is 'subscription', 'managementGroup' or 'tenant'.
+          name: "Development"
           location: "westeurope"
-          # Specifies the scope of the deployment or deploymentStack. For deployment, choose from 'resourceGroup', 'subscription', 'managementGroup', 'tenant'. For deploymentStack, choose from 'resourceGroup', 'subscription', 'managementGroup'.
           scope: "subscription"
-          # Specifies the path to the template file.
           template-file: .infra/main.bicep
-          # Specifies the path to the parameters file.
           parameters-file: .infra/parameters.bicepparam
-          # Specifies the change types to exclude from the 'What If' operation.
-          what-if-exclude-change-types: # optional
-          # Specifies the action to take on unmanaged resources. Choose from 'delete' or 'detach'.
           action-on-unmanage-resources: delete
+          action-on-unmanage-resourcegroups: delete
+          deny-settings-mode: denyWriteAndDelete
 
           # TODO
           # Push the rust image to ACR

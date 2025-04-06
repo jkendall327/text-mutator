@@ -1,0 +1,31 @@
+name: Rust
+
+on:
+  push:
+    branches: ["master"]
+  pull_request:
+    branches: ["master"]
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build the backend
+        run: cargo build --verbose --manifest-path backend/Cargo.toml
+      - name: Test the backend
+        run: cargo test --verbose --manifest-path backend/Cargo.toml
+
+      - name: Setup Node.js environment
+        uses: actions/setup-node@v4.3.0
+        with:
+          cache: "npm"
+      - name: Build the frontend
+        run: npm --prefix frontend ci
+      - name: Test the frontend
+        run: npm run --prefix frontend test

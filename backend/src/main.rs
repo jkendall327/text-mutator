@@ -34,9 +34,11 @@ async fn main() -> anyhow::Result<()> {
 
     let backend_url = env.backend_url.to_string();
 
-    let listener = tokio::net::TcpListener::bind(backend_url).await.unwrap();
+    let listener = tokio::net::TcpListener::bind(backend_url.clone())
+        .await
+        .unwrap();
 
-    tracing::info!("listening on {}", listener.local_addr().unwrap());
+    tracing::info!("listening on {}", backend_url.clone());
 
     axum::serve(listener, app)
         .with_graceful_shutdown(shutdown_signal())

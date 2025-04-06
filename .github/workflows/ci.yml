@@ -50,3 +50,7 @@ jobs:
         uses: Azure/login@v2.3.0
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+          # TODO
+          # Push the rust image to ACR
+          # Push the frontend to Azure static apps

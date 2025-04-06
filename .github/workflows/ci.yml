@@ -99,6 +99,8 @@ jobs:
         uses: azure/docker-login@v1
         with:
           login-server: ${{ steps.bicep.outputs.acrLoginServer }}
+          username: ${{ secrets.ACR_USERNAME }}
+          password: ${{ secrets.ACR_PASSWORD }}
 
       - name: Push Docker image
         run: |

@@ -124,8 +124,8 @@ jobs:
             az webapp config container set \
             --name ${{ steps.bicep.outputs.appServiceName }} \
             --resource-group ${{ steps.bicep.outputs.rgName }} \
-            --docker-custom-image-name ${{ steps.bicep.outputs.acrLoginServer }} \
-            --docker-registry-server-url ${{ steps.bicep.outputs.imageName }} \
+            --docker-custom-image-name ${{ steps.bicep.outputs.imageName }}:latest \
+            --docker-registry-server-url ${{ steps.bicep.outputs.acrLoginServer }} \
 
       # https://docs.github.com/en/actions/use-cases-and-examples/deploying/deploying-to-azure-static-web-app
       - name: Push the frontend to Azure SWA

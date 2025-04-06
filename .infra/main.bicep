@@ -26,7 +26,7 @@ module swa 'br/public:avm/res/web/static-site:0.3.0' = {
   params: {
     name: 'stapp-${resourceToken}'
     location: location
-    sku: 'Free'
+    sku: 'Standard'
   }
 }
 

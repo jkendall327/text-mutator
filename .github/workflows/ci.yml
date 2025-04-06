@@ -67,7 +67,7 @@ jobs:
           # Specifies the path to the template file.
           template-file: .infra/main.bicep
           # Specifies the path to the parameters file.
-          parameters-file: ./infra/parameters.bicepparam
+          parameters-file: .infra/parameters.bicepparam
           # Specifies the change types to exclude from the 'What If' operation.
           what-if-exclude-change-types: # optional
           # Specifies the action to take on unmanaged resources. Choose from 'delete' or 'detach'.

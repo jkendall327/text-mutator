@@ -93,3 +93,6 @@ output rgName string = rg.name
 output identityClientId string = identity.outputs.managedIdentityClientId
 output identityPrincipalId string = identity.outputs.managedIdentityPrincipalId
 output identityResourceId string = identity.outputs.managedIdentityResourceId
+output appServiceName string = backend.outputs.appServiceName
+output acrName string = registry.outputs.registryName
+output acrLoginServer string = registry.outputs.loginServer

@@ -1,4 +1,5 @@
 // az deployment sub what-if --location westeurope --template-file main.bicep --parameters parameters.bicepparam
+// az deployment sub create --location westeurope --template-file .infra/main.bicep --parameters .infra/parameters.bicepparam
 targetScope = 'subscription'
 
 param location string = deployment().location
@@ -24,7 +25,7 @@ module swa 'br/public:avm/res/web/static-site:0.3.0' = {
   name: swaName
   scope: rg
   params: {
-    name: 'stapp-${resourceToken}'
+    name: '${appName}-${environment}-${location}-${resourceToken}'
     location: location
     sku: 'Standard'
   }
@@ -32,6 +33,9 @@ module swa 'br/public:avm/res/web/static-site:0.3.0' = {
 
 module registry 'modules/acr.bicep' = {
   scope: rg
+  params: {
+    appName: appName
+  }
 }
 
 module backend 'modules/backend.bicep' = {
@@ -45,17 +49,19 @@ module backend 'modules/backend.bicep' = {
   }
 }
 
-module link 'modules/link.bicep' = {
-  name: 'link'
-  scope: rg
-  params: {
-    appName: appName
-    environment: environment
-    location: location
-    staticWebAppName: swa.outputs.name
-    backendAppResourceId: backend.outputs.backendResourceId
-  }
-}
+// swaName:
+
+// module link 'modules/link.bicep' = {
+//   name: 'link'
+//   scope: rg
+//   params: {
+//     appName: appName
+//     environment: environment
+//     location: location
+//     staticWebAppName: swaName
+//     backendAppResourceId: backend.outputs.backendResourceId
+//   }
+// }
 
 // Built-in role definition ID for AcrPull
 var acrPullRoleDefinitionId = subscriptionResourceId(

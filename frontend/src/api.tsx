@@ -3,19 +3,17 @@ import { Mutation, MutationRequest } from './models.tsx'
 export const apiService = {
 
     async healthcheck(): Promise<boolean> {
-        //const apiUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080';
-        //const response = await fetch(`${apiUrl}/api/v1/health/`);
+        const url = getBaseUrl();
 
-        const response = await fetch(`http://localhost:8080/api/v1/health`);
+        const response = await fetch(`${url}/health`);
 
         return response.ok ? true : false;
     },
 
     async mutate(req: MutationRequest): Promise<Mutation> {
-        //const apiUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080';
-        //const response = await fetch(`${apiUrl}/api/v1/health/`);
+        const url = getBaseUrl();
 
-        const response = await fetch("http://localhost:8080/api/v1/mutate", {
+        const response = await fetch(`${url}/mutate`, {
             method: "post",
             headers: {
                 'Accept': 'application/json',
@@ -25,8 +23,20 @@ export const apiService = {
             body: JSON.stringify(req)
         })
 
-        const json = await response.json();
+        const result = await response.json();
 
-        return json
+        return parseJSON<Mutation>(result);
     }
+}
+
+function parseJSON<T>(json: string): T {
+    return JSON.parse(json) as T;
+}
+
+const CURRENT_VERSION: number = 1;
+
+function getBaseUrl(): string {
+    const apiUrl = import.meta.env.VITE_API_BASE_URL;
+
+    return `${apiUrl}/api/v${CURRENT_VERSION}`;
 }

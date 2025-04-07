@@ -1,9 +1,21 @@
 import { useEffect, useState } from 'react'
 import { apiService as api } from './api.tsx'
-import './Mutator.css'
 import { MutationRequest, MutationResponse } from './models.tsx'
+import { useQuery } from '@tanstack/react-query'
+import './Mutator.css'
+
+function useHealthcheck() {
+    return useQuery({
+        queryKey: ['healthcheck'], queryFn: async (): Promise<string> => {
+            const response = await fetch('api/v1/health')
+            return await response.text();
+        }
+    });
+}
 
 export default function Mutator() {
+    const { status, data, error, isFetching } = useHealthcheck()
+
     const [mutation, setMutation] = useState<MutationResponse | undefined>(undefined)
     const [backendOk, setBackendOk] = useState<boolean>(false)
 

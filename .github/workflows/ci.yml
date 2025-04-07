@@ -82,7 +82,6 @@ jobs:
           type: "deployment"
           operation: "create"
           name: "Development"
-          location: "westeurope"
           scope: "resourceGroup"
           template-file: .infra/main.bicep
           parameters-file: .infra/parameters.bicepparam

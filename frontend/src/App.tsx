@@ -8,8 +8,9 @@ function App() {
   const [backendOk, setBackendOk] = useState<string>("dead")
 
   const fetchUser = async () => {
-      const apiUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
-      const response = await fetch(`${apiUrl}/api/health/`);
+      //const apiUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080';
+      //const response = await fetch(`${apiUrl}/api/v1/health/`);
+      const response = await fetch(`http://localhost:8080/api/v1/health`);
 
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);

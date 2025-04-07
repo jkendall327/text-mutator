@@ -15,7 +15,7 @@ export const apiService = {
         //const apiUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080';
         //const response = await fetch(`${apiUrl}/api/v1/health/`);
 
-        const response = await fetch("http://localhost:8080/api/v1/mutate/", {
+        const response = await fetch("http://localhost:8080/api/v1/mutate", {
             method: "post",
             headers: {
                 'Accept': 'application/json',

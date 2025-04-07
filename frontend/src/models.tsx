@@ -1,10 +1,14 @@
 interface MutationRequest {
     text: string,
-    options: MutationOptionsDto
+    config: MutationOptionsDto
 }
 
 interface MutationOptionsDto {
+    allowSwaps: boolean
+    allowPunctuationRemoval: boolean
     allowHomophones: boolean
+    seed: number | undefined
+    mutationRate: number
 }
 
 interface Mutation {

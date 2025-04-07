@@ -1,5 +1,6 @@
 // az deployment sub what-if --location westeurope --template-file main.bicep --parameters parameters.bicepparam
 // az deployment sub create --location westeurope --template-file .infra/main.bicep --parameters .infra/parameters.bicepparam
+// az deployment group create --resource-group textmutator --template-file .infra/main.bicep --parameters .infra/parameters.bicepparam
 param location string = resourceGroup().location
 param environment string = 'dev'
 param appName string = 'text-mutator'
@@ -32,7 +33,7 @@ module swa 'br/public:avm/res/web/static-site:0.3.0' = {
   name: swaName
   params: {
     name: swaName
-    location: location
+    //location: location
     // linkedBackend: {
     //   backendId: backend.outputs.backendResourceId
     // }

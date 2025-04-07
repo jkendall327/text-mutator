@@ -78,11 +78,12 @@ jobs:
         uses: Azure/bicep-deploy@v2.1.0
         with:
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          resource-group-name: "textmutator"
           type: "deployment"
           operation: "create"
           name: "Development"
           location: "westeurope"
-          scope: "subscription"
+          scope: "resourceGroup"
           template-file: .infra/main.bicep
           parameters-file: .infra/parameters.bicepparam
           action-on-unmanage-resources: delete

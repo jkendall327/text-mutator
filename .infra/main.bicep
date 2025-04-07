@@ -1,27 +1,14 @@
 // az deployment sub what-if --location westeurope --template-file main.bicep --parameters parameters.bicepparam
 // az deployment sub create --location westeurope --template-file .infra/main.bicep --parameters .infra/parameters.bicepparam
-targetScope = 'subscription'
-
-param location string = deployment().location
+param location string = resourceGroup().location
 param environment string = 'dev'
 param appName string = 'text-mutator'
 param managedIdentityName string
-param rgName string
 param imageName string
 
-@description('Create a resource group')
-resource rg 'Microsoft.Resources/resourceGroups@2024-03-01' = {
-  name: rgName
-  location: location
-  tags: {
-    application: appName
-  }
-}
-
-var resourceToken = uniqueString(rg.id)
+var resourceToken = uniqueString(resourceGroup().id)
 
 module registry 'modules/acr.bicep' = {
-  scope: rg
   params: {
     appName: appName
     environment: environment
@@ -30,7 +17,6 @@ module registry 'modules/acr.bicep' = {
 
 module backend 'modules/backend.bicep' = {
   name: 'backend'
-  scope: rg
   params: {
     appName: appName
     environment: environment
@@ -44,7 +30,6 @@ var swaName = 'sta-${appName}-${environment}-${resourceToken}'
 @description('Create a static web app')
 module swa 'br/public:avm/res/web/static-site:0.3.0' = {
   name: swaName
-  scope: rg
   params: {
     name: swaName
     location: location
@@ -61,7 +46,6 @@ module swa 'br/public:avm/res/web/static-site:0.3.0' = {
 
 module link 'modules/link.bicep' = {
   name: 'link'
-  scope: rg
   params: {
     appName: appName
     environment: environment
@@ -89,7 +73,6 @@ module link 'modules/link.bicep' = {
 // }
 
 module identity 'modules/identity.bicep' = {
-  scope: rg
   params: {
     managedIdentityName: managedIdentityName
     appName: appName
@@ -102,9 +85,6 @@ output endpoint string = swa.outputs.defaultHostname
 
 @description('Output the static web app name')
 output staticWebAppName string = swa.outputs.name
-
-@description('Output the name of the resource group')
-output rgName string = rg.name
 
 output identityClientId string = identity.outputs.managedIdentityClientId
 output identityPrincipalId string = identity.outputs.managedIdentityPrincipalId

@@ -19,22 +19,6 @@ resource rg 'Microsoft.Resources/resourceGroups@2024-03-01' = {
 }
 
 var resourceToken = uniqueString(rg.id)
-var swaName = 'sta-${appName}-${environment}-${resourceToken}'
-
-@description('Create a static web app')
-module swa 'br/public:avm/res/web/static-site:0.3.0' = {
-  name: swaName
-  scope: rg
-  params: {
-    name: swaName
-    location: location
-    sku: 'Standard'
-    tags: {
-      environment: environment
-      appName: appName
-    }
-  }
-}
 
 module registry 'modules/acr.bicep' = {
   scope: rg
@@ -55,17 +39,37 @@ module backend 'modules/backend.bicep' = {
   }
 }
 
-module link 'modules/link.bicep' = {
-  name: 'link'
+var swaName = 'sta-${appName}-${environment}-${resourceToken}'
+
+@description('Create a static web app')
+module swa 'br/public:avm/res/web/static-site:0.3.0' = {
+  name: swaName
   scope: rg
   params: {
-    appName: appName
-    environment: environment
+    name: swaName
     location: location
-    staticWebAppName: swaName
-    backendAppResourceId: backend.outputs.backendResourceId
+    linkedBackend: {
+      resourceId: backend.outputs.backendResourceId
+    }
+    sku: 'Standard'
+    tags: {
+      environment: environment
+      appName: appName
+    }
   }
 }
+
+// module link 'modules/link.bicep' = {
+//   name: 'link'
+//   scope: rg
+//   params: {
+//     appName: appName
+//     environment: environment
+//     location: location
+//     staticWebAppName: swaName
+//     backendAppResourceId: backend.outputs.backendResourceId
+//   }
+// }
 
 // TODO: figure out how to make this role assignment idempotent.
 

@@ -7,10 +7,20 @@ param location string = resourceGroup().location
 @description('The resource group ID to assign the Contributor role to')
 param targetResourceGroupId string = resourceGroup().id
 
+@description('The deployment environment')
+param environment string = 'dev'
+
+@description('The semantic app name')
+param appName string
+
 // Create the user-assigned managed identity
 resource managedIdentity 'Microsoft.ManagedIdentity/userAssignedIdentities@2023-01-31' = {
   name: managedIdentityName
   location: location
+  tags: {
+    environment: environment
+    appName: appName
+  }
 }
 
 // Assign the Contributor role to the managed identity on the specified resource group

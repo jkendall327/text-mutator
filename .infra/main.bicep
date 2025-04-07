@@ -90,7 +90,11 @@ module link 'modules/link.bicep' = {
 
 module identity 'modules/identity.bicep' = {
   scope: rg
-  params: { managedIdentityName: managedIdentityName }
+  params: {
+    managedIdentityName: managedIdentityName
+    appName: appName
+    environment: environment
+  }
 }
 
 @description('Output the default hostname')

@@ -38,7 +38,5 @@ function parseJSON<T>(json: string): T {
 const CURRENT_VERSION: number = 1;
 
 function getBaseUrl(): string {
-    const apiUrl = import.meta.env.VITE_API_BASE_URL;
-
-    return `${apiUrl}/api/v${CURRENT_VERSION}`;
+    return `$/api/v${CURRENT_VERSION}`;
 }

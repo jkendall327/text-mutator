@@ -41,7 +41,7 @@ function App() {
         </button>
       </div>
       <p>
-        Response body: {JSON.stringify(mutation)}
+        Response body: {mutation === undefined ? "(not found)" : JSON.stringify(mutation)}
       </p>
       <p>
         Backend: {backendOk.toString()}

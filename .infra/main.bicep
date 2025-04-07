@@ -48,9 +48,9 @@ module swa 'br/public:avm/res/web/static-site:0.3.0' = {
   params: {
     name: swaName
     location: location
-    linkedBackend: {
-      resourceId: backend.outputs.backendResourceId
-    }
+    // linkedBackend: {
+    //   backendId: backend.outputs.backendResourceId
+    // }
     sku: 'Standard'
     tags: {
       environment: environment
@@ -59,17 +59,17 @@ module swa 'br/public:avm/res/web/static-site:0.3.0' = {
   }
 }
 
-// module link 'modules/link.bicep' = {
-//   name: 'link'
-//   scope: rg
-//   params: {
-//     appName: appName
-//     environment: environment
-//     location: location
-//     staticWebAppName: swaName
-//     backendAppResourceId: backend.outputs.backendResourceId
-//   }
-// }
+module link 'modules/link.bicep' = {
+  name: 'link'
+  scope: rg
+  params: {
+    appName: appName
+    environment: environment
+    location: location
+    staticWebAppName: swaName
+    backendAppResourceId: backend.outputs.backendResourceId
+  }
+}
 
 // TODO: figure out how to make this role assignment idempotent.
 

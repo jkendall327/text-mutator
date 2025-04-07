@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { apiService as api } from './api.tsx'
 import { MutationRequest, MutationResponse } from './models.tsx'
 import './Mutator.css'
-import ServerStatus from './ServerStatus.tsx'
+import ServerStatus from '../ServerStatus.tsx'
 
 export default function Mutator() {
 

@@ -33,13 +33,14 @@ function App() {
     <>
       <div>
         <button onClick={() => performMutation()}>
+          Mutate!
         </button>
       </div>
       <p>
-        {JSON.stringify(mutation)}
+        Response body: {JSON.stringify(mutation)}
       </p>
       <p>
-        Backend: {backendOk}
+        Backend: {backendOk.toString()}
       </p>
     </>
   )

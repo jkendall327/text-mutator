@@ -1,4 +1,4 @@
-import { Mutation, MutationRequest } from './models.tsx'
+import { MutationRequest, MutationResponse } from './models.tsx'
 
 export const apiService = {
 
@@ -10,7 +10,7 @@ export const apiService = {
         return response.ok ? true : false;
     },
 
-    async mutate(req: MutationRequest): Promise<Mutation> {
+    async mutate(req: MutationRequest): Promise<MutationResponse> {
         const url = getBaseUrl();
 
         const response = await fetch(`${url}/mutate`, {
@@ -25,7 +25,9 @@ export const apiService = {
 
         const result = await response.json();
 
-        return parseJSON<Mutation>(result);
+        const parsed = parseJSON<MutationResponse>(result);
+
+        return parsed
     }
 }
 

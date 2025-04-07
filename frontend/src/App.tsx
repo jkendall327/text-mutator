@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react'
 import { apiService as api } from './api.tsx'
 import './App.css'
-import { Mutation, MutationRequest } from './models.tsx'
+import { MutationRequest, MutationResponse } from './models.tsx'
 
 function App() {
-  const [mutation, setMutation] = useState<Mutation | undefined>(undefined)
+  const [mutation, setMutation] = useState<MutationResponse | undefined>(undefined)
   const [backendOk, setBackendOk] = useState<boolean>(false)
 
   const performHealthcheck = async () => {

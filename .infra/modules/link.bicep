@@ -7,9 +7,6 @@ param environment string = 'dev'
 @description('The semantic app name')
 param appName string
 
-@description('The deployment location')
-param location string = resourceGroup().location
-
 @description('The name of the static web app')
 param staticWebAppName string
 
@@ -21,7 +18,7 @@ resource staticWebApp 'Microsoft.Web/staticSites@2023-12-01' existing = {
   name: staticWebAppName
 }
 
-var linkName = toLower('link-${appName}-${environment}-${location}')
+var linkName = toLower('link-${appName}-${environment}')
 
 @description('Link backend to static web app')
 resource link 'Microsoft.Web/staticSites/linkedBackends@2023-12-01' = {
@@ -29,6 +26,5 @@ resource link 'Microsoft.Web/staticSites/linkedBackends@2023-12-01' = {
   name: linkName
   properties: {
     backendResourceId: backendAppResourceId
-    region: location
   }
 }

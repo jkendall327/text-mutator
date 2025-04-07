@@ -11,6 +11,12 @@ param acrName string = 'acr${uniqueString(resourceGroup().id)}'
 @description('Provide a tier of your Azure Container Registry.')
 param acrSku string = 'Basic'
 
+@description('The deployment environment')
+param environment string = 'dev'
+
+@description('The semantic app name')
+param appName string
+
 resource acr 'Microsoft.ContainerRegistry/registries@2023-01-01-preview' = {
   name: acrName
   location: location
@@ -19,6 +25,10 @@ resource acr 'Microsoft.ContainerRegistry/registries@2023-01-01-preview' = {
   }
   properties: {
     adminUserEnabled: true
+  }
+  tags: {
+    environment: environment
+    appName: appName
   }
 }
 

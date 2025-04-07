@@ -29,11 +29,19 @@ module swa 'br/public:avm/res/web/static-site:0.3.0' = {
     name: swaName
     location: location
     sku: 'Standard'
+    tags: {
+      environment: environment
+      appName: appName
+    }
   }
 }
 
 module registry 'modules/acr.bicep' = {
   scope: rg
+  params: {
+    appName: appName
+    environment: environment
+  }
 }
 
 module backend 'modules/backend.bicep' = {

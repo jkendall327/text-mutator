@@ -12,10 +12,19 @@ pub struct MutationRequest {
 
 #[derive(serde::Serialize, serde::Deserialize, Default)]
 pub struct MutationOptions {
+    #[serde(rename = "mutationRate")]
     pub mutation_rate: f32,
+
+    #[serde(rename = "allowSwaps")]
     pub allow_swaps: bool,
+
+    #[serde(rename = "allowPunctuationRemoval")]
     pub allow_punctuation_removal: bool,
+
+    #[serde(rename = "allowHomophones")]
     pub allow_homophones: bool,
+
+    #[serde(rename = "seed")]
     pub seed: Option<u64>,
 }
 

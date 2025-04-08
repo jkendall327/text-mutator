@@ -1,4 +1,4 @@
-import { ChangeEvent, FC, useState } from "react"
+import { ChangeEvent, FC, useEffect, useState } from "react"
 import { MutationOptions } from "./mutator/models";
 
 interface MutationOptionsDisplayProps {
@@ -13,6 +13,10 @@ const MutationOptionsDisplay: FC<MutationOptionsDisplayProps> = ({ onOptionsChan
         mutationRate: 0.10,
         seed: undefined
     })
+
+    useEffect(() => {
+        onOptionsChanged(options);
+    });
 
     function handleChange(e: ChangeEvent<HTMLInputElement>): void {
         const name = e.target.name;
@@ -32,17 +36,17 @@ const MutationOptionsDisplay: FC<MutationOptionsDisplayProps> = ({ onOptionsChan
 
     return (
         <>
-            <label htmlFor="homophones">
-                <input name="homophones" type="checkbox" checked={options.allowHomophones} onChange={e => handleChange(e)} />
+            <label htmlFor="allowHomophones">
+                <input name="allowHomophones" type="checkbox" checked={options.allowHomophones} onChange={e => handleChange(e)} />
             </label>
-            <label htmlFor="swaps">
-                <input name="swaps" type="checkbox" checked={options.allowSwaps} onChange={e => handleChange(e)} />
+            <label htmlFor="allowSwaps">
+                <input name="allowSwaps" type="checkbox" checked={options.allowSwaps} onChange={e => handleChange(e)} />
             </label>
-            <label htmlFor="punctuation">
-                <input name="punctuation" type="checkbox" checked={options.allowPunctuationRemoval} onChange={e => handleChange(e)} />
+            <label htmlFor="allowPunctuationRemoval">
+                <input name="allowPunctuationRemoval" type="checkbox" checked={options.allowPunctuationRemoval} onChange={e => handleChange(e)} />
             </label>
-            <label htmlFor="rate">
-                <input name="rate" type="number" value={options.mutationRate} onChange={e => handleChange(e)} />
+            <label htmlFor="mutationRate">
+                <input name="mutationRate" type="number" value={options.mutationRate} onChange={e => handleChange(e)} />
             </label>
             <label htmlFor="seed">
                 <input name="seed" type="number" value={options.seed} onChange={e => handleChange(e)} />

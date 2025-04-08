@@ -50,6 +50,8 @@ resource appService 'Microsoft.Web/sites@2020-06-01' = {
       linuxFxVersion: 'DOCKER|${registryLoginServer}:${imageName}:latest'
       appSettings: [
         { name: 'RUST_LOG', value: logLevel }
+        { name: 'MUTATOR_BACKEND_URL', value: '0.0.0.0:8080' }
+        { name: 'MUTATOR_FRONTEND_URL', value: 'http://localhost:5173' } // TODO: consider removing this, not really needed in production.
       ]
     }
   }

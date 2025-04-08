@@ -38,5 +38,5 @@ function parseJSON<T>(json: string): T {
 const CURRENT_VERSION: number = 1;
 
 function getBaseUrl(): string {
-    return `$/api/v${CURRENT_VERSION}`;
+    return `http://localhost:8080/api/v${CURRENT_VERSION}`;
 }

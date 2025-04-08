@@ -3,6 +3,7 @@ use axum::{
     http::{StatusCode, Uri},
     response::IntoResponse,
 };
+use tracing::info;
 
 use crate::{
     models::{Mutation, MutationDto, MutationItemDto, MutationRequest, MutationResponseDto},
@@ -71,6 +72,14 @@ pub async fn mutate(Json(payload): Json<MutationRequest>) -> impl IntoResponse {
             })
             .collect(),
     };
+
+    let debug_response = serde_json::to_string(&response);
+
+    if debug_response.is_ok() {
+        info!("Sending response: {:?}", debug_response);
+    } else {
+        info!("Serializing the response failed!");
+    }
 
     Json(response).into_response()
 }

@@ -8,7 +8,7 @@ interface MutationCardProps {
 }
 
 const apiClient = axios.create({
-    baseURL: 'http://0.0.0.0:8080/api/v1',
+    baseURL: '/api/v1',
     headers: {
         'Content-Type': 'application/json',
         'Accept': 'application/json',

@@ -47,7 +47,7 @@ resource appService 'Microsoft.Web/sites@2020-06-01' = {
     siteConfig: {
       alwaysOn: true
       acrUseManagedIdentityCreds: true
-      linuxFxVersion: 'DOCKER|${registryLoginServer}:${imageName}:latest'
+      linuxFxVersion: 'DOCKER|${registryLoginServer}/${imageName}:latest'
       appSettings: [
         { name: 'RUST_LOG', value: logLevel }
         { name: 'WEBSITES_PORT', value: '8080' }

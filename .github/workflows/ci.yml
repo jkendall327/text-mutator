@@ -111,19 +111,14 @@ jobs:
             version=${{ github.sha }}
           tags: ${{ steps.bicep.outputs.acrLoginServer }}/${{ steps.image.outputs.imageName }}:${{ github.sha }},${{ steps.bicep.outputs.acrLoginServer }}/${{ steps.image.outputs.imageName }}:latest
 
-      # - name: Push Docker image
-      #   run: |
-      #     docker build ./backend -f ./backend/Dockerfile -t ${{ steps.bicep.outputs.acrLoginServer }}/${{ steps.image.outputs.imageName }}:${{ github.sha }} -t ${{ steps.bicep.outputs.acrLoginServer }}/${{ steps.image.outputs.imageName }}:latest
-      #     docker push ${{ steps.bicep.outputs.acrLoginServer }}/${{ steps.image.outputs.imageName }}:${{ github.sha }}
-      #     docker push ${{ steps.bicep.outputs.acrLoginServer }}/${{ steps.image.outputs.imageName }}:latest
-
+      # TODO: cleanup using the resource group name here directly.
       - name: Update App Server image
         uses: azure/CLI@v1
         with:
           inlineScript: |
             az webapp config container set \
             --name ${{ steps.bicep.outputs.appServiceName }} \
-            --resource-group ${{ steps.bicep.outputs.rgName }} \
+            --resource-group textmutator \
             --container-image-name ${{ steps.image.outputs.imageName }}:latest \
             --container-registry-url ${{ steps.bicep.outputs.acrLoginServer }} \
 
@@ -136,30 +131,3 @@ jobs:
           action: "upload"
           app_location: ${{ env.APP_LOCATION }}
           output_location: ${{ env.OUTPUT_LOCATION }}
-
-          # TODO
-          # Push the rust image to ACR
-
-          # https://learn.microsoft.com/en-us/azure/container-instances/container-instances-github-action
-
-        #   - name: 'Build and push image'
-        #   uses: azure/docker-login@v1
-        #   with:
-        #     login-server: ${{ secrets.REGISTRY_LOGIN_SERVER }}
-        #     username: ${{ secrets.REGISTRY_USERNAME }}
-        #     password: ${{ secrets.REGISTRY_PASSWORD }}
-        # - run: |
-        #     docker build . -t ${{ secrets.REGISTRY_LOGIN_SERVER }}/sampleapp:${{ github.sha }}
-        #     docker push ${{ secrets.REGISTRY_LOGIN_SERVER }}/sampleapp:${{ github.sha }}
-
-        # - name: 'Deploy to Azure Container Instances'
-        #   uses: 'azure/aci-deploy@v1'
-        #   with:
-        #     resource-group: ${{ secrets.RESOURCE_GROUP }}
-        #     dns-name-label: ${{ secrets.RESOURCE_GROUP }}${{ github.run_number }}
-        #     image: ${{ secrets.REGISTRY_LOGIN_SERVER }}/sampleapp:${{ github.sha }}
-        #     registry-login-server: ${{ secrets.REGISTRY_LOGIN_SERVER }}
-        #     registry-username: ${{ secrets.REGISTRY_USERNAME }}
-        #     registry-password: ${{ secrets.REGISTRY_PASSWORD }}
-        #     name: aci-sampleapp
-        #     location: 'west us'

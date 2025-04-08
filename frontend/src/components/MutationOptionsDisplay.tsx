@@ -5,6 +5,14 @@ interface MutationOptionsDisplayProps {
     onOptionsChanged: (options: MutationOptions) => void;
 }
 
+const optionsKeys: { [K in keyof MutationOptions]: K } = {
+    allowHomophones: "allowHomophones",
+    allowPunctuationRemoval: "allowPunctuationRemoval",
+    allowSwaps: "allowSwaps",
+    mutationRate: "mutationRate",
+    seed: "seed"
+};
+
 const MutationOptionsDisplay: FC<MutationOptionsDisplayProps> = ({ onOptionsChanged }) => {
     const [options, setOptions] = useState<MutationOptions>({
         allowHomophones: true,
@@ -63,22 +71,22 @@ const MutationOptionsDisplay: FC<MutationOptionsDisplayProps> = ({ onOptionsChan
     return (
         <>
             <div className="mutation-options">
-                <label htmlFor="allowHomophones">
+                <label htmlFor={optionsKeys.allowHomophones}>
                     Allow homophones
-                    <input name="allowHomophones" type="checkbox" checked={options.allowHomophones} onChange={e => handleChange(e)} />
+                    <input name={optionsKeys.allowHomophones} type="checkbox" checked={options.allowHomophones} onChange={e => handleChange(e)} />
                 </label>
-                <label htmlFor="allowSwaps">
+                <label htmlFor={optionsKeys.allowSwaps}>
                     Allow swaps
-                    <input name="allowSwaps" type="checkbox" checked={options.allowSwaps} onChange={e => handleChange(e)} />
+                    <input name={optionsKeys.allowSwaps} type="checkbox" checked={options.allowSwaps} onChange={e => handleChange(e)} />
                 </label>
-                <label htmlFor="allowPunctuationRemoval">
+                <label htmlFor={optionsKeys.allowPunctuationRemoval}>
                     Allow punctuation to be removed
-                    <input name="allowPunctuationRemoval" type="checkbox" checked={options.allowPunctuationRemoval} onChange={e => handleChange(e)} />
+                    <input name={optionsKeys.allowPunctuationRemoval} type="checkbox" checked={options.allowPunctuationRemoval} onChange={e => handleChange(e)} />
                 </label>
-                <label htmlFor="mutationRate">
+                <label htmlFor={optionsKeys.mutationRate}>
                     Mutation rate (0 - 1.00)
                     <input
-                        name="mutationRate"
+                        name={optionsKeys.mutationRate}
                         step="0.01"
                         min="0"
                         max="1"
@@ -86,9 +94,9 @@ const MutationOptionsDisplay: FC<MutationOptionsDisplayProps> = ({ onOptionsChan
                         value={options.mutationRate}
                         onChange={e => handleChange(e)} />
                 </label>
-                <label htmlFor="seed">
+                <label htmlFor={optionsKeys.seed}>
                     Seed (optional)
-                    <input name="seed" type="number" value={options.seed ?? ''} onChange={e => handleChange(e)} />
+                    <input name={optionsKeys.seed} type="number" value={options.seed ?? ''} onChange={e => handleChange(e)} />
                 </label>
             </div>
         </>)

@@ -19,15 +19,43 @@ const MutationOptionsDisplay: FC<MutationOptionsDisplayProps> = ({ onOptionsChan
     }, [options, onOptionsChanged]);
 
     function handleChange(e: ChangeEvent<HTMLInputElement>): void {
-        const name = e.target.name;
-        const value = e.target.value;
+        const { name, type, value, checked } = e.target;
+
+        let newValue: string | number | boolean | undefined;
+
+        if (type === 'checkbox') {
+            newValue = checked;
+        } else if (type === 'number') {
+            if (value === '') {
+                // Handle empty number input: undefined for seed, maybe 0 for rate?
+                newValue = name === 'seed' ? undefined : 0;
+            } else {
+                // Parse number inputs
+                const num = name === 'mutationRate' ? parseFloat(value) : parseInt(value, 10);
+
+                if (!isNaN(num)) {
+                    newValue = num;
+
+                    if (name === 'mutationRate') {
+                        // Clamp between 0 and 1.
+                        newValue = Math.max(0, Math.min(1, newValue));
+                    }
+                } else {
+                    console.warn(`Invalid number input for ${name}: ${value}`);
+                    return;
+                }
+            }
+        } else {
+            // Handle other types like 'text' if needed
+            newValue = value;
+        }
 
         setOptions(prev => {
             const key = name as keyof MutationOptions
 
             return {
                 ...prev,
-                [key]: value
+                [key]: newValue
             }
         })
     }
@@ -41,7 +69,7 @@ const MutationOptionsDisplay: FC<MutationOptionsDisplayProps> = ({ onOptionsChan
                 </label>
                 <label htmlFor="allowSwaps">
                     Allow swaps
-                    <input name="" type="checkbox" checked={options.allowSwaps} onChange={e => handleChange(e)} />
+                    <input name="allowSwaps" type="checkbox" checked={options.allowSwaps} onChange={e => handleChange(e)} />
                 </label>
                 <label htmlFor="allowPunctuationRemoval">
                     Allow punctuation to be removed

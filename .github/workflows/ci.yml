@@ -111,17 +111,6 @@ jobs:
             version=${{ github.sha }}
           tags: ${{ steps.bicep.outputs.acrLoginServer }}/${{ steps.image.outputs.imageName }}:${{ github.sha }},${{ steps.bicep.outputs.acrLoginServer }}/${{ steps.image.outputs.imageName }}:latest
 
-      # TODO: cleanup using the resource group name here directly.
-      - name: Update App Server image
-        uses: azure/CLI@v1
-        with:
-          inlineScript: |
-            az webapp config container set \
-            --name ${{ steps.bicep.outputs.appServiceName }} \
-            --resource-group textmutator \
-            --container-image-name ${{ steps.bicep.outputs.acrLoginServer }}/${{ steps.image.outputs.imageName }}:latest \
-            --container-registry-url ${{ steps.bicep.outputs.acrLoginServer }} \
-
       # https://docs.github.com/en/actions/use-cases-and-examples/deploying/deploying-to-azure-static-web-app
       - name: Push the frontend to Azure SWA
         uses: Azure/static-web-apps-deploy@1a947af9992250f3bc2e68ad0754c0b0c11566c9

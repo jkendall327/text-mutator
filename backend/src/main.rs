@@ -15,7 +15,10 @@ use axum::{
 };
 use env::EnvironmentVariables;
 use tokio::signal;
-use tower_http::{cors::CorsLayer, trace::TraceLayer};
+use tower_http::{
+    cors::{Any, CorsLayer},
+    trace::TraceLayer,
+};
 use tracing::{Level, Span};
 use tracing_appender::rolling;
 use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt};
@@ -73,6 +76,7 @@ fn setup_logging() {
 fn app(env: &EnvironmentVariables) -> Router {
     let cors = CorsLayer::new()
         .allow_origin(env.frontend_url.parse::<HeaderValue>().unwrap())
+        .allow_headers(Any)
         .allow_methods([Method::POST, Method::GET]);
 
     let tracer = TraceLayer::new_for_http()

@@ -28,7 +28,11 @@ interface Mutation {
 }
 
 interface MutationOptions {
+    allowSwaps: boolean
+    allowPunctuationRemoval: boolean
     allowHomophones: boolean
+    seed: number | undefined
+    mutationRate: number
 }
 
 export type { MutationRequest, MutationOptionsDto, Mutation, MutationOptions, MutationResponse };

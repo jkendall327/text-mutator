@@ -1,8 +1,9 @@
-import { MutationRequest } from './models.tsx'
+import { MutationOptions, MutationRequest } from './models.tsx'
 import './Mutator.css'
 import ServerStatus from '../ServerStatus.tsx'
 import MutationCard from './MutationCard.tsx'
 import { useState } from 'react';
+import MutationOptionsDisplay from '../MutationOptionsDisplay.tsx';
 
 export default function Mutator() {
     const [req, setReq] = useState<MutationRequest>({
@@ -31,20 +32,28 @@ export default function Mutator() {
         })
     }
 
+    const handleOptionsChanged = (options: MutationOptions) => {
+        console.log(options);
+    };
+
     return (
         <>
-            <div>
-                <label>
-                    Text input: <input name="myInput" onChange={e => setText(e.target.value)} />
-                </label>
+            <MutationOptionsDisplay
+                onOptionsChanged={handleOptionsChanged}
+            />
 
-                <button onClick={() => handleClick()}>
-                    Mutate!
-                </button>
-            </div>
+            <label>
+                Text input: <input name="myInput" onChange={e => setText(e.target.value)} />
+            </label>
+
+            <button onClick={() => handleClick()}>
+                Mutate!
+            </button>
+
             <MutationCard
                 req={req}
             />
+
             <ServerStatus />
         </>
     )

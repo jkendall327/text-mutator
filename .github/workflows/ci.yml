@@ -119,7 +119,7 @@ jobs:
             az webapp config container set \
             --name ${{ steps.bicep.outputs.appServiceName }} \
             --resource-group textmutator \
-            --container-image-name ${{ steps.image.outputs.imageName }}:latest \
+            --container-image-name ${{ steps.bicep.outputs.acrLoginServer }}/${{ steps.image.outputs.imageName }}:latest \
             --container-registry-url ${{ steps.bicep.outputs.acrLoginServer }} \
 
       # https://docs.github.com/en/actions/use-cases-and-examples/deploying/deploying-to-azure-static-web-app

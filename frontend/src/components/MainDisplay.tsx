@@ -1,4 +1,4 @@
-import './Mutator.css'
+import './MainDisplay.css'
 import MutationCard from './MutationCard.tsx'
 import { useState } from 'react';
 import { MutationOptions, MutationRequest } from '../models.tsx';

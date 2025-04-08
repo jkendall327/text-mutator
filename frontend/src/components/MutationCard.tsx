@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
-import { MutationRequest, MutationResponse } from "../../models";
 import axios from "axios";
+import { MutationRequest, MutationResponse } from "../models";
 
 interface MutationCardProps {
     req: MutationRequest;

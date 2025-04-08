@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { MutationRequest, MutationResponse } from "../models";
+import { useState } from "react";
 
 interface MutationCardProps {
     req: MutationRequest;
@@ -35,14 +36,34 @@ function useMutation(req: MutationRequest) {
 }
 
 const MutationCard: React.FC<MutationCardProps> = ({ req }) => {
+    const { status, data, error, isFetching } = useMutation(req)
 
-    const { data, error, isFetching } = useMutation(req)
+    const [found, setFound] = useState<number>(0);
+    const [done, setDone] = useState<boolean>(false);
+
+    function isDisabled(): boolean {
+        if (status === 'pending' || status === 'error') {
+            return true;
+        }
+
+        return found === data.mutations.length;
+    }
+
+    const content =
+        <>
+            <p>Mutations:</p> <span>3/{data?.mutations.length}</span>
+            <button disabled={isDisabled()} onClick={() => setFound(found + 1)}>Found one!</button>
+            <button disabled={done} onClick={() => setDone(true)}>Done</button>
+            <p>{data?.mutated_text}</p>
+        </>
 
     return (
         <>
-            {isFetching ? <p>Loading...</p> :
-                error ? <p>Error! {error.message}</p>
-                    : data?.mutated_text}
+            {
+                isFetching ?
+                    <p>Loading...</p> :
+                    error ? <p>Error! {error.message}</p> : content
+            }
         </>
     )
 }

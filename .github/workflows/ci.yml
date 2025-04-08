@@ -1,4 +1,4 @@
-name: Rust
+name: Text Mutator
 
 on:
   workflow_dispatch:

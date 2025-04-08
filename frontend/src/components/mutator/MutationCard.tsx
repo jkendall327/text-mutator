@@ -1,25 +1,28 @@
 import { useQuery } from "@tanstack/react-query";
 import { MutationRequest, MutationResponse } from "./models";
+import axios from "axios";
 
 interface MutationCardProps {
     req: MutationRequest;
 }
 
+const apiClient = axios.create({
+    baseURL: 'http://0.0.0.0:8080/api/v1',
+    headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+    }
+});
+
 function performCall(req: MutationRequest) {
     return async (): Promise<MutationResponse> => {
-        console.log("Fetching mutation for:", req);
+        console.log("Fetching mutation for: ", req);
 
-        const response = await fetch(`http://0.0.0.0:8080/api/v1/mutate`, {
-            method: "post",
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
+        const response = await apiClient.post<MutationResponse>("/mutate", req);
 
-            body: JSON.stringify(req)
-        });
+        console.log("Retrieved: ", response.data);
 
-        return await response.json();
+        return response.data;
     };
 }
 

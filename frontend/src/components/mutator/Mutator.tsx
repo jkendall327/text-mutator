@@ -32,9 +32,7 @@ export default function Mutator() {
                     Mutate!
                 </button>
             </div>
-            <p>
-                Response body: {mutation === undefined ? "(not found)" : JSON.stringify(mutation)}
-            </p>
+            {mutation === undefined ? <p>...</p> : <p>Text: {mutation.mutated_text}. Number of mutations: {mutation.mutations.length}</p>}
             <ServerStatus />
         </>
     )

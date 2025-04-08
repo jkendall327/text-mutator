@@ -23,11 +23,12 @@ export const apiService = {
             body: JSON.stringify(req)
         })
 
-        const result = await response.json();
+        const json = await response.json();
+        const result = json as MutationResponse
+        return result;
+        // const parsed = parseJSON<MutationResponse>(result);
 
-        const parsed = parseJSON<MutationResponse>(result);
-
-        return parsed
+        //return parsed
     }
 }
 

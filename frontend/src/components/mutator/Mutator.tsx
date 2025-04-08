@@ -12,28 +12,30 @@ export default function Mutator() {
             allowHomophones: true,
             allowPunctuationRemoval: true,
             allowSwaps: true,
-            mutationRate: 1.0,
+            mutationRate: 0.1,
             seed: undefined
         }
     });
 
     const [text, setText] = useState<string>("");
 
+    const [options, setOptions] = useState<MutationOptions>({
+        allowHomophones: true,
+        allowPunctuationRemoval: true,
+        allowSwaps: true,
+        mutationRate: 1.0,
+        seed: undefined
+    });
+
     function handleClick(): void {
         setReq({
             text: text,
-            config: {
-                allowHomophones: true,
-                allowPunctuationRemoval: true,
-                allowSwaps: true,
-                mutationRate: 1.0,
-                seed: undefined
-            }
+            config: options
         })
     }
 
     const handleOptionsChanged = (options: MutationOptions) => {
-        console.log(options);
+        setOptions(options);
     };
 
     return (

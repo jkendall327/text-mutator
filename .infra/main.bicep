@@ -44,15 +44,15 @@ module swa 'br/public:avm/res/web/static-site:0.3.0' = {
   }
 }
 
-module link 'modules/link.bicep' = {
-  name: 'link'
-  params: {
-    appName: appName
-    environment: environment
-    staticWebAppName: swaName
-    backendAppResourceId: backend.outputs.backendResourceId
-  }
-}
+// module link 'modules/link.bicep' = {
+//   name: 'link'
+//   params: {
+//     appName: appName
+//     environment: environment
+//     staticWebAppName: swaName
+//     backendAppResourceId: backend.outputs.backendResourceId
+//   }
+// }
 
 // TODO: figure out how to make this role assignment idempotent.
 
@@ -71,13 +71,13 @@ module link 'modules/link.bicep' = {
 //   }
 // }
 
-module identity 'modules/identity.bicep' = {
-  params: {
-    managedIdentityName: managedIdentityName
-    appName: appName
-    environment: environment
-  }
-}
+// module identity 'modules/identity.bicep' = {
+//   params: {
+//     managedIdentityName: managedIdentityName
+//     appName: appName
+//     environment: environment
+//   }
+// }
 
 @description('Output the default hostname')
 output endpoint string = swa.outputs.defaultHostname
@@ -85,9 +85,9 @@ output endpoint string = swa.outputs.defaultHostname
 @description('Output the static web app name')
 output staticWebAppName string = swa.outputs.name
 
-output identityClientId string = identity.outputs.managedIdentityClientId
-output identityPrincipalId string = identity.outputs.managedIdentityPrincipalId
-output identityResourceId string = identity.outputs.managedIdentityResourceId
+// output identityClientId string = identity.outputs.managedIdentityClientId
+// output identityPrincipalId string = identity.outputs.managedIdentityPrincipalId
+// output identityResourceId string = identity.outputs.managedIdentityResourceId
 output appServiceName string = backend.outputs.appServiceName
 output acrName string = registry.outputs.registryName
 output acrLoginServer string = registry.outputs.loginServer

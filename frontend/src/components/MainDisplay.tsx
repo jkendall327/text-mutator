@@ -1,9 +1,9 @@
-import { MutationOptions, MutationRequest } from './models.tsx'
 import './Mutator.css'
-import ServerStatus from '../ServerStatus.tsx'
 import MutationCard from './MutationCard.tsx'
 import { useState } from 'react';
-import MutationOptionsDisplay from '../MutationOptionsDisplay.tsx';
+import { MutationOptions, MutationRequest } from '../models.tsx';
+import MutationOptionsDisplay from './MutationOptionsDisplay.tsx';
+import ServerStatus from './ServerStatus.tsx';
 
 export default function Mutator() {
     const [req, setReq] = useState<MutationRequest>({

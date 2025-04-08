@@ -1,5 +1,5 @@
 import { ChangeEvent, FC, useEffect, useState } from "react"
-import { MutationOptions } from "./mutator/models";
+import { MutationOptions } from "../models";
 
 interface MutationOptionsDisplayProps {
     onOptionsChanged: (options: MutationOptions) => void;

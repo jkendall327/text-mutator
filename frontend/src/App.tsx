@@ -1,13 +1,13 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import Mutator from './components/mutator/Mutator.tsx'
 import './App.css'
+import MainDisplay from './components/MainDisplay'
 
 const queryClient = new QueryClient()
 
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <Mutator />
+      <MainDisplay />
     </QueryClientProvider>)
 }
 

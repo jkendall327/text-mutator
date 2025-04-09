@@ -52,7 +52,9 @@ export default function Mutator() {
                         Mutate!
                     </button>
 
-                    <input name="myInput" onChange={e => setText(e.target.value)} />
+                    <div className='text-area'>
+                        <input name="myInput" onChange={e => setText(e.target.value)} />
+                    </div>
                 </div>
 
                 <MutationCard

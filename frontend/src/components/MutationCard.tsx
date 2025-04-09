@@ -71,10 +71,12 @@ const MutationCard: React.FC<MutationCardProps> = ({ req }) => {
                 {data?.mutations.length != undefined ? <><p>Mutations:</p> <span>{found}/{data?.mutations.length}</span></> : <></>}
 
                 <div className="mutation-buttons">
-                    <button disabled={isDisabled()} onClick={() => handleFound()}>Found one!</button>
-                    <button disabled={done} onClick={() => handleDone()}>Done</button>
+                    <button id='found-one' disabled={isDisabled()} onClick={() => handleFound()}>Found one!</button>
+                    <button id='done' disabled={done} onClick={() => handleDone()}>Done</button>
                 </div>
-                <p>{data?.mutated_text}</p>
+                <div className="text-area">
+                    <p>{data?.mutated_text}</p>
+                </div>
             </div>
         </>
 

@@ -33,6 +33,8 @@ export default function MainDisplay() {
 
     const response = useMutation(req);
 
+    const done: boolean = found == response?.data?.mutations.length;
+
     function getNewMutation(): void {
         setFound(0);
 
@@ -57,7 +59,7 @@ export default function MainDisplay() {
             return "Enter some text on the left and click 'mutate' to get started!";
         }
 
-        if (found == response.data.mutations.length) {
+        if (done) {
             return "You've found all the mutations!";
         }
 
@@ -99,7 +101,7 @@ export default function MainDisplay() {
                     />
                 </div>
 
-                <span id='mutation-count'>{getStatusMessage()}</span>
+                <span id='mutation-count' className={done ? "mutations-complete" : "mutations-incomplete"}>{getStatusMessage()}</span>
             </div>
 
             <div className='server-status'>

@@ -64,7 +64,7 @@ export default function Mutator() {
                     />
                 </div>
 
-                You have found X/Y mutations
+                <span id='mutation-count'>You've found X/Y mutations.</span>
             </div>
 
             <div className='server-status'>

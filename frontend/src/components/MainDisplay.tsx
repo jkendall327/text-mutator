@@ -55,7 +55,7 @@ export default function Mutator() {
                         </button>
 
                         <div className='text-area'>
-                            <input name="myInput" onChange={e => setText(e.target.value)} />
+                            <textarea name="myInput" placeholder="Place your plain text here..." onChange={e => setText(e.target.value)} />
                         </div>
                     </div>
 

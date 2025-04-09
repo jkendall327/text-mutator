@@ -23,18 +23,28 @@
     flex-basis: 0;
 }
 
-.text-area {
-    flex-basis: 80%;
-    flex-grow: 0;
+.text-area>textarea {
     background-color: #696969;
     min-height: 600px;
     min-width: 400px;
     border-radius: 2%;
-
+    background-color: transparent;
+    border: none;
+    outline: none;
+    resize: none;
+    color: white;
+    font-family: sans-serif;
+    font-size: 1rem;
 }
 
-.mutation-options {
-    display: none;
+.text-area {
+    flex-basis: 80%;
+    flex-grow: 0;
+    padding: 20px;
+    background-color: #696969;
+    min-height: 600px;
+    min-width: 400px;
+    border-radius: 2%;
 }
 
 .server-status {

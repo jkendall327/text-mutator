@@ -5,7 +5,7 @@ import { MutationOptions, MutationRequest } from '../models.tsx';
 import MutationOptionsDisplay from './MutationOptionsDisplay.tsx';
 import ServerStatus from './ServerStatus.tsx';
 import Modal from './Modal/Modal.tsx';
-import useMutation from '../useMutation.tsx';
+import useMutation from '../hooks/useMutation.tsx';
 
 export default function Mutator() {
     const [modalOpen, setModalOpen] = useState<boolean>(false);

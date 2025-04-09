@@ -1,14 +1,5 @@
-import { useQuery } from "@tanstack/react-query";
 import './ServerStatus.css'
-
-function useHealthcheck() {
-    return useQuery({
-        queryKey: ['healthcheck'], queryFn: async (): Promise<string> => {
-            const response = await fetch('/api/v1/health')
-            return await response.text();
-        }
-    });
-}
+import useHealthcheck from "../hooks/useHealthcheck";
 
 export default function ServerStatus() {
     const { status, data, error, isFetching } = useHealthcheck()

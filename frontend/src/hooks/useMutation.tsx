@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
-import { MutationRequest, MutationResponse } from "./models";
+import { MutationRequest, MutationResponse } from "../models";
 
 const apiClient = axios.create({
     baseURL: '/api/v1',

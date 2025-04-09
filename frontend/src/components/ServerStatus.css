@@ -1,0 +1,28 @@
+.server-status {
+    display: flex;
+    align-items: center;
+    justify-content: right;
+    gap: 1%;
+}
+
+.indicator-alive {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #4bc475;
+    border: 1px solid #000;
+}
+
+.indicator-dead {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #a1a1a1;
+    border: 1px solid #000;
+}
+
+.server-status-description {
+    font-size: small;
+    font-style: italic;
+    opacity: 0.80;
+}

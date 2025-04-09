@@ -42,7 +42,7 @@ const MutationCard: React.FC<MutationCardProps> = ({ req }) => {
     const [found, setFound] = useState<number>(0);
 
     // All mutations have been found.
-    const done: boolean = status === 'success' && !!data && found === data.mutations.length;
+    const done: boolean = status != 'success' && !!data && found === data.mutations.length;
 
     function isDisabled(): boolean {
         if (status != 'success' || !data) {
@@ -67,8 +67,6 @@ const MutationCard: React.FC<MutationCardProps> = ({ req }) => {
     const content =
         <>
             <div className="mutations-display">
-
-                {/* {data?.mutations.length != undefined ? <p>You have found {found}/{data?.mutations.length} mutations</p> : <></>} */}
 
                 <div className="mutation-buttons">
                     <button id='found-one' disabled={isDisabled()} onClick={() => handleFound()}>Found one!</button>

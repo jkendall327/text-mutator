@@ -59,11 +59,17 @@ export default function MainDisplay() {
             return "Enter some text on the left and click 'mutate' to get started!";
         }
 
+        const total = response.data.mutations.length;
+
+        if (total === 0) {
+            return "Your text was too short to introduce any mutations, sorry.";
+        }
+
         if (done) {
             return "You've found all the mutations!";
         }
 
-        return `You've found ${found}/${response.data.mutations.length} mutations.`
+        return `You've found ${found}/${total} mutations.`
     }
 
     return (

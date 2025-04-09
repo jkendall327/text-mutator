@@ -79,9 +79,12 @@ const MutationCard: React.FC<MutationCardProps> = ({ req }) => {
         </>
 
     return (
-        isFetching ?
-            <p>Loading...</p> :
-            error ? <p>Error! {error.message}</p> : content
+        <>
+            {isFetching && <p>Loading...</p>}
+            {error && <p>Error! {error.message}</p>}
+
+            {!!data && content}
+        </>
     )
 }
 

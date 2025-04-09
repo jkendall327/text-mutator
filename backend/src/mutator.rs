@@ -160,9 +160,11 @@ impl TextMutator {
         let mut actual_mutations = 0;
         debug!("Applying mutations from end to beginning to avoid index shifts");
 
-        for mutation in selected_mutations {
+        for mutation in &selected_mutations {
             match mutation {
                 Mutation::SwapLetters(i) => {
+                    let i = *i;
+
                     let mut chars: Vec<char> = result.chars().collect();
                     if i + 1 < chars.len() {
                         trace!(
@@ -178,6 +180,8 @@ impl TextMutator {
                     }
                 }
                 Mutation::RemovePunctuation(i) => {
+                    let i = *i;
+
                     let mut chars: Vec<char> = result.chars().collect();
                     if i < chars.len() && chars[i].is_ascii_punctuation() {
                         trace!("Removing punctuation '{}' at position {}", chars[i], i);
@@ -187,6 +191,7 @@ impl TextMutator {
                     }
                 }
                 Mutation::ReplaceHomophone(i, len) => {
+                    let i = *i;
                     if i + len <= result.len() {
                         let word = &result[i..i + len];
                         let clean_word: String = word
@@ -217,10 +222,19 @@ impl TextMutator {
 
         info!("Applied {} mutations", actual_mutations);
 
+        let mapped = selected_mutations
+            .iter()
+            .map(|f| MutationItem {
+                start: 1,
+                end: 2,
+                r#type: Mutation::SwapLetters(1),
+            })
+            .collect::<Vec<MutationItem>>();
+
         // TODO: actually return rich info for mutations.
         MutationResponse {
             mutated_text: result,
-            mutations: vec![MutationItem {start: 1, end: 2, r#type: Mutation::SwapLetters(1)}],
+            mutations: mapped,
         }
     }
 }

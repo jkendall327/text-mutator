@@ -1,45 +1,16 @@
-import { useQuery } from "@tanstack/react-query";
-import axios from "axios";
-import { MutationRequest, MutationResponse } from "../models";
-import { useState } from "react";
+import { UseQueryResult } from '@tanstack/react-query';
+import { MutationResponse } from '../models';
 import './MutationCard.css'
 
 interface MutationCardProps {
-    req: MutationRequest;
+    response: UseQueryResult<MutationResponse, Error>
+    found: number;
+    onFound: () => void;
+    onDone: () => void;
 }
 
-const apiClient = axios.create({
-    baseURL: '/api/v1',
-    headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-    }
-});
-
-function performCall(req: MutationRequest) {
-    return async (): Promise<MutationResponse> => {
-        console.log("Fetching mutation for: ", req);
-
-        const response = await apiClient.post<MutationResponse>("/mutate", req);
-
-        console.log("Retrieved: ", response.data);
-
-        return response.data;
-    };
-}
-
-function useMutation(req: MutationRequest) {
-    const isEnabled = !!req.text;
-
-    return useQuery({
-        queryKey: ['mutation', req], queryFn: performCall(req), enabled: isEnabled, retry: false
-    });
-}
-
-const MutationCard: React.FC<MutationCardProps> = ({ req }) => {
-    const { status, data, error, isFetching } = useMutation(req)
-
-    const [found, setFound] = useState<number>(0);
+const MutationCard: React.FC<MutationCardProps> = ({ response, found, onFound, onDone }) => {
+    const { status, data, error, isFetching } = response;
 
     // All mutations have been found.
     const done: boolean = status != 'success' || found === data.mutations.length;
@@ -52,38 +23,20 @@ const MutationCard: React.FC<MutationCardProps> = ({ req }) => {
         return found === data.mutations.length;
     }
 
-    function handleFound(): void {
-        setFound(found + 1)
-    }
-
-    function handleDone(): void {
-        if (status != 'success') {
-            throw new Error("Tried to complete text when the HTTP status was not yet successful.");
-        }
-
-        setFound(data.mutations.length);
-    }
-
-    const content =
-        <>
-            <div className="mutations-display">
-
-                <div className="mutation-buttons">
-                    <button id='found-one' disabled={isDisabled()} onClick={() => handleFound()}>Found one!</button>
-                    <button id='done' disabled={done} onClick={() => handleDone()}>Done</button>
-                </div>
-                <div className="text-area">
-                    <p>{data?.mutated_text}</p>
-                </div>
-            </div>
-        </>
-
     return (
         <>
             {isFetching && <p>Loading...</p>}
             {error && <p>Error! {error.message}</p>}
+            {!!data && <div className="mutations-display">
 
-            {!!data && content}
+                <div className="mutation-buttons">
+                    <button id='found-one' disabled={isDisabled()} onClick={() => onFound()}>Found one!</button>
+                    <button id='done' disabled={done} onClick={() => onDone()}>Done</button>
+                </div>
+                <div className="text-area">
+                    <p>{data?.mutated_text}</p>
+                </div>
+            </div>}
         </>
     )
 }

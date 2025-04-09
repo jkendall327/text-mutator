@@ -5,7 +5,7 @@ function useHealthcheck() {
         queryKey: ['healthcheck'], queryFn: async (): Promise<string> => {
             const response = await fetch('/api/v1/health')
             return await response.text();
-        }
+        }, refetchInterval: 5000
     });
 }
 

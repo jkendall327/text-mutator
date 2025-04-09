@@ -2,22 +2,15 @@ import './ServerStatus.css'
 import useHealthcheck from "../../hooks/useHealthcheck";
 
 export default function ServerStatus() {
-    const { status, data, error, isFetching } = useHealthcheck()
-
-    const content =
-        <>
-            <p className="server-status-description">
-                Backend: {data}
-            </p>
-        </>
+    const { data, error, isFetching } = useHealthcheck();
 
     return (
         <div className="server-status">
-            <div className={status === 'success' ? 'indicator-alive' : 'indicator-dead'} />
+            <div className={error ? 'indicator-dead' : 'indicator-alive'} />
 
-            {isFetching && <p>Loading...</p>}
-            {error && <span>Error: {error.message}</span>}
-            {!!data && content}
+            <p className="server-status-description">
+                Backend: {isFetching ? "Checking..." : error ? `Error: ${error.message}` : data}
+            </p>
         </div>
     )
 }

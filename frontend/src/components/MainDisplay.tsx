@@ -50,7 +50,7 @@ export default function Mutator() {
                 <div className='main-columns'>
 
                     <div className='input-text-section'>
-                        <button onClick={() => handleClick()}>
+                        <button disabled={text === ""} onClick={() => handleClick()}>
                             Mutate!
                         </button>
 

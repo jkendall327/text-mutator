@@ -1,0 +1,16 @@
+.main-display {
+    display: flex;
+    justify-content: space-evenly;
+    min-width: 1100px;
+}
+
+.input-text-section {
+    display: flex;
+    flex-direction: column;
+}
+
+.server-status {
+    position: fixed;
+    bottom: 0;
+    right: 0;
+}

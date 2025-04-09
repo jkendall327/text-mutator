@@ -1,0 +1,6 @@
+.mutation-options {
+    display: flex;
+    flex-direction: column;
+    gap: 25%;
+    justify-content: space-around;
+}

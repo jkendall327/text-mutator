@@ -1,0 +1,9 @@
+.mutations-display {
+    display: flex;
+    flex-direction: column;
+}
+
+.mutation-buttons {
+    display: flex;
+    flex-direction: row;
+}

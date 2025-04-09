@@ -2,6 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { MutationRequest, MutationResponse } from "../models";
 import { useState } from "react";
+import './MutationCard.css'
 
 interface MutationCardProps {
     req: MutationRequest;
@@ -67,8 +68,10 @@ const MutationCard: React.FC<MutationCardProps> = ({ req }) => {
         <>
             <div className="mutations-display">
                 <p>Mutations:</p> <span>{found}/{data?.mutations.length}</span>
-                <button disabled={isDisabled()} onClick={() => handleFound()}>Found one!</button>
-                <button disabled={done} onClick={() => handleDone()}>Done</button>
+                <div className="mutation-buttons">
+                    <button disabled={isDisabled()} onClick={() => handleFound()}>Found one!</button>
+                    <button disabled={done} onClick={() => handleDone()}>Done</button>
+                </div>
                 <p>{data?.mutated_text}</p>
             </div>
         </>

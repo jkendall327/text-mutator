@@ -40,23 +40,28 @@ export default function Mutator() {
 
     return (
         <>
-            <MutationOptionsDisplay
-                onOptionsChanged={handleOptionsChanged}
-            />
+            <div className='main-display'>
+                <MutationOptionsDisplay
+                    onOptionsChanged={handleOptionsChanged}
+                />
 
-            <label>
-                Text input: <input name="myInput" onChange={e => setText(e.target.value)} />
-            </label>
+                <div className='input-text-section'>
+                    <input name="myInput" onChange={e => setText(e.target.value)} />
 
-            <button onClick={() => handleClick()}>
-                Mutate!
-            </button>
+                    <button onClick={() => handleClick()}>
+                        Mutate!
+                    </button>
+                </div>
 
-            <MutationCard
-                req={req}
-            />
+                <MutationCard
+                    req={req}
+                />
 
-            <ServerStatus />
+            </div>
+
+            <div className='server-status'>
+                <ServerStatus />
+            </div>
         </>
     )
 }

@@ -25,18 +25,18 @@ const MutationCard: React.FC<MutationCardProps> = ({ response, found, onFound, o
 
     return (
         <>
-            {isFetching && <p>Loading...</p>}
-            {error && <p>Error! {error.message}</p>}
-            {!!data && <div className="mutations-display">
+            <div className="mutations-display">
 
                 <div className="mutation-buttons">
                     <button id='found-one' disabled={isDisabled()} onClick={() => onFound()}>Found one!</button>
                     <button id='done' disabled={done} onClick={() => onDone()}>Done</button>
                 </div>
                 <div className="text-area">
-                    <p>{data?.mutated_text}</p>
+                    {isFetching && <p>Loading...</p>}
+                    {error && <p>Error! {error.message}</p>}
+                    {!!data && <p>{data?.mutated_text}</p>}
                 </div>
-            </div>}
+            </div>
         </>
     )
 }

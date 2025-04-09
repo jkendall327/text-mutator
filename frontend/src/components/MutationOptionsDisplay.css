@@ -4,3 +4,19 @@
     gap: 25%;
     justify-content: space-around;
 }
+
+.mutation-options label {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.75em;
+}
+
+.mutation-options input {
+    margin-left: 1em;
+}
+
+.mutation-options input[type="number"] {
+    width: 6em;
+    text-align: right;
+}

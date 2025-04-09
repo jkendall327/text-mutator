@@ -1,0 +1,31 @@
+.dialog {
+    max-width: 20rem;
+    padding: 2rem;
+    border: 0;
+    border-radius: 0.5rem;
+    box-shadow: hsl(0 0% 0% / 10%) 0 0 0.5rem 0.25rem;
+    position: relative;
+  }
+
+  .dialog::backdrop {
+    background: hsl(0 0% 0% / 50%);
+  }
+
+.modal-close-btn {
+    font-size: .75em;
+    position: absolute;
+    top: .25em;
+    right: .25em;
+}
+
+input[type="number"],
+input[type="check"],
+button {
+    padding: 0.5em;
+    font: inherit;
+    line-height: 1;
+}
+
+button {
+    cursor: pointer;
+}

@@ -30,9 +30,9 @@
 .tooltip:before {
     content: attr(data-text);
     position: absolute;
-    top: 50%;
+    top: 10%;
     transform: translateY(-50%);
-    left: 20%;
+    left: 25%;
     width: 200px;
     padding: 10px;
     border-radius: 10px;

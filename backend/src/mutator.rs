@@ -3,7 +3,7 @@ use rand::{SeedableRng, seq::SliceRandom};
 use tracing::{debug, info, trace};
 
 use crate::homophones::HomophoneSets;
-use crate::models::{Mutation, MutationResponse};
+use crate::models::{Mutation, MutationItem, MutationResponse};
 
 /// Applies mutations to text
 pub struct TextMutator {
@@ -220,7 +220,7 @@ impl TextMutator {
         // TODO: actually return rich info for mutations.
         MutationResponse {
             mutated_text: result,
-            mutations: vec![],
+            mutations: vec![MutationItem {start: 1, end: 2, r#type: Mutation::SwapLetters(1)}],
         }
     }
 }

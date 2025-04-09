@@ -1,13 +1,13 @@
 import './MainDisplay.css'
-import MutationCard from './MutationCard.tsx'
+import MutationCard from '../MutationCard/MutationCard.tsx'
 import { useState } from 'react';
-import { MutationOptions, MutationRequest } from '../models.tsx';
-import MutationOptionsDisplay from './MutationOptionsDisplay.tsx';
-import ServerStatus from './ServerStatus.tsx';
-import Modal from './Modal/Modal.tsx';
-import useMutation from '../hooks/useMutation.tsx';
+import { MutationOptions, MutationRequest } from '../../models.tsx';
+import MutationOptionsDisplay from '../MutationOptionsDisplay/MutationOptionsDisplay.tsx';
+import ServerStatus from '../ServerStatus/ServerStatus.tsx';
+import Modal from '../Modal/Modal.tsx';
+import useMutation from '../../hooks/useMutation.tsx';
 
-export default function Mutator() {
+export default function MainDisplay() {
     const [modalOpen, setModalOpen] = useState<boolean>(false);
     const [found, setFound] = useState<number>(0);
     const [text, setText] = useState<string>("");

@@ -1,5 +1,5 @@
 import './ServerStatus.css'
-import useHealthcheck from "../hooks/useHealthcheck";
+import useHealthcheck from "../../hooks/useHealthcheck";
 
 export default function ServerStatus() {
     const { status, data, error, isFetching } = useHealthcheck()

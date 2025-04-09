@@ -1,5 +1,5 @@
 import { UseQueryResult } from '@tanstack/react-query';
-import { MutationResponse } from '../models';
+import { MutationResponse } from '../../models';
 import './MutationCard.css'
 
 interface MutationCardProps {

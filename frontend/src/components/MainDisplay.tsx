@@ -41,11 +41,11 @@ export default function Mutator() {
     return (
         <>
             <div className='main-display'>
-                <div className='mutation-options'>
+                {/* <div className='mutation-options'>
                     <MutationOptionsDisplay
                         onOptionsChanged={handleOptionsChanged}
                     />
-                </div>
+                </div> */}
 
                 <div className='input-text-section'>
                     <button onClick={() => handleClick()}>

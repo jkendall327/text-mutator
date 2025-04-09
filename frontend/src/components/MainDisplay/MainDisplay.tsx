@@ -50,6 +50,18 @@ export default function MainDisplay() {
         setFound(response.data.mutations.length);
     }
 
+    function getStatusMessage(): string {
+        if (response?.data == null) {
+            return "Enter some text on the left and click 'mutate' to get started!";
+        }
+
+        if (found == response.data.mutations.length) {
+            return "You've found all the mutations!";
+        }
+
+        return `You've found ${found}/${response.data.mutations.length} mutations.`
+    }
+
     return (
         <>
             <div className='main-display'>
@@ -85,7 +97,7 @@ export default function MainDisplay() {
                     />
                 </div>
 
-                {!!response.data && <span id='mutation-count'>You've found {found}/{response.data.mutations.length} mutations.</span>}
+                <span id='mutation-count'>{getStatusMessage()}</span>
             </div>
 
             <div className='server-status'>

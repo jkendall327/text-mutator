@@ -4,8 +4,11 @@ import { useState } from 'react';
 import { MutationOptions, MutationRequest } from '../models.tsx';
 import MutationOptionsDisplay from './MutationOptionsDisplay.tsx';
 import ServerStatus from './ServerStatus.tsx';
+import Modal from './Modal/Modal.tsx';
 
 export default function Mutator() {
+    const [modalOpen, setModalOpen] = useState<boolean>(false);
+
     const [req, setReq] = useState<MutationRequest>({
         text: "",
         config: {
@@ -41,17 +44,24 @@ export default function Mutator() {
     return (
         <>
             <div className='main-display'>
-                <div className='mutation-options-section'>
+
+                <Modal
+                    isOpen={modalOpen}
+                    onClose={() => setModalOpen(false)}
+                    hasCloseBtn={true}>
                     <MutationOptionsDisplay
                         onOptionsChanged={handleOptionsChanged}
                     />
-                </div>
+                </Modal>
 
                 <div className='main-columns'>
                     <div className='input-text-section'>
-                        <button disabled={text === ""} onClick={() => handleClick()}>
-                            Mutate!
-                        </button>
+                        <div className='input-text-buttons'>
+                            <button id='settings' disabled={modalOpen} onClick={() => setModalOpen(true)}>Settings</button>
+                            <button id='mutate' disabled={text === ""} onClick={() => handleClick()}>
+                                Mutate!
+                            </button>
+                        </div>
 
                         <div className='text-area'>
                             <textarea name="myInput" placeholder="Place your plain text here..." onChange={e => setText(e.target.value)} />

@@ -18,6 +18,23 @@
     gap: 2%;
 }
 
+.input-text-buttons {
+    display: flex;
+    gap: 2%;
+}
+
+.input-text-buttons>#settings {
+    flex-basis: 50%;
+    flex-grow: 0;
+    flex-shrink: 0;
+}
+
+.input-text-buttons>#mutate {
+    flex-basis: 50%;
+    flex-grow: 0;
+    flex-shrink: 0;
+}
+
 .input-text-section>button {
     flex-grow: 1;
     flex-basis: 0;

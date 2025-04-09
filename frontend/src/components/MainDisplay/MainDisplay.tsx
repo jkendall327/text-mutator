@@ -33,7 +33,9 @@ export default function MainDisplay() {
 
     const response = useMutation(req);
 
-    function handleClick(): void {
+    function getNewMutation(): void {
+        setFound(0);
+
         setReq({
             text: text,
             config: options
@@ -79,7 +81,7 @@ export default function MainDisplay() {
                     <div className='input-text-section'>
                         <div className='input-text-buttons'>
                             <button id='settings' disabled={modalOpen} onClick={() => setModalOpen(true)}>Settings</button>
-                            <button id='mutate' disabled={text === ""} onClick={() => handleClick()}>
+                            <button id='mutate' disabled={text === ""} onClick={() => getNewMutation()}>
                                 Mutate!
                             </button>
                         </div>

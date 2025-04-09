@@ -45,7 +45,9 @@ export default function Mutator() {
     };
 
     function handleDone(): void {
-        throw new Error('Function not implemented.');
+        if (response?.data == null) return;
+
+        setFound(response.data.mutations.length);
     }
 
     return (

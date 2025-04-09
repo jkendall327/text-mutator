@@ -47,20 +47,24 @@ export default function Mutator() {
                     />
                 </div> */}
 
-                <div className='input-text-section'>
-                    <button onClick={() => handleClick()}>
-                        Mutate!
-                    </button>
+                <div className='main-columns'>
 
-                    <div className='text-area'>
-                        <input name="myInput" onChange={e => setText(e.target.value)} />
+                    <div className='input-text-section'>
+                        <button onClick={() => handleClick()}>
+                            Mutate!
+                        </button>
+
+                        <div className='text-area'>
+                            <input name="myInput" onChange={e => setText(e.target.value)} />
+                        </div>
                     </div>
+
+                    <MutationCard
+                        req={req}
+                    />
                 </div>
 
-                <MutationCard
-                    req={req}
-                />
-
+                You have found X/Y mutations
             </div>
 
             <div className='server-status'>

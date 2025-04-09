@@ -1,8 +1,15 @@
 .main-display {
     display: flex;
+    flex-direction: column;
+    gap: 40px;
+}
+
+.main-columns {
+    display: flex;
     justify-content: space-evenly;
     gap: 5%;
     min-width: 1100px;
+
 }
 
 .input-text-section {

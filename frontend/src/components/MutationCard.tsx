@@ -68,7 +68,7 @@ const MutationCard: React.FC<MutationCardProps> = ({ req }) => {
         <>
             <div className="mutations-display">
 
-                {data?.mutations.length != undefined ? <p>You have found {found}/{data?.mutations.length} mutations</p> : <></>}
+                {/* {data?.mutations.length != undefined ? <p>You have found {found}/{data?.mutations.length} mutations</p> : <></>} */}
 
                 <div className="mutation-buttons">
                     <button id='found-one' disabled={isDisabled()} onClick={() => handleFound()}>Found one!</button>

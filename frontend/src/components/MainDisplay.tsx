@@ -114,7 +114,7 @@ export default function Mutator() {
                     />
                 </div>
 
-                <span id='mutation-count'>You've found X/Y mutations.</span>
+                {!!response.data && <span id='mutation-count'>You've found {found}/{response.data.mutations.length} mutations.</span>}
             </div>
 
             <div className='server-status'>

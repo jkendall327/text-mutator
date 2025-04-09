@@ -15,16 +15,9 @@ export default function ServerStatus() {
         <div className="server-status">
             <div className={status === 'success' ? 'indicator-alive' : 'indicator-dead'} />
 
-            {isFetching ? (
-                'Loading...'
-            ) : status === 'error' ? (
-                <span>Error: {error.message}</span>
-            ) : (
-                <>
-                    {content}
-                </>
-            )
-            }
+            {isFetching && <p>Loading...</p>}
+            {error && <span>Error: {error.message}</span>}
+            {!!data && content}
         </div>
     )
 }

@@ -72,6 +72,16 @@ export default function MainDisplay() {
         return `You've found ${found}/${total} mutations.`
     }
 
+    function getStatusClass(): string {
+        const total = response?.data?.mutations?.length;
+
+        if (total != null && total > 0 && found == total) {
+            return "mutations-complete"
+        }
+
+        return "mutations-incomplete";
+    }
+
     return (
         <>
             <div className='main-display'>
@@ -107,7 +117,7 @@ export default function MainDisplay() {
                     />
                 </div>
 
-                <span id='mutation-count' className={done ? "mutations-complete" : "mutations-incomplete"}>{getStatusMessage()}</span>
+                <span id='mutation-count' className={getStatusClass()}>{getStatusMessage()}</span>
             </div>
 
             <div className='server-status'>

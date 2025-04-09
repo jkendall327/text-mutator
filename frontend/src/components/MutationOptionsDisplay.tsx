@@ -72,19 +72,19 @@ const MutationOptionsDisplay: FC<MutationOptionsDisplayProps> = ({ onOptionsChan
     return (
         <>
             <div className="mutation-options">
-                <label htmlFor={optionsKeys.allowHomophones}>
+                <label htmlFor={optionsKeys.allowHomophones} data-text="Swaps common homophones (e.g. 'your' for 'you're')" className="tooltip">
                     Allow homophones
                     <input name={optionsKeys.allowHomophones} type="checkbox" checked={options.allowHomophones} onChange={e => handleChange(e)} />
                 </label>
-                <label htmlFor={optionsKeys.allowSwaps}>
+                <label htmlFor={optionsKeys.allowSwaps} data-text="Swaps two consecutive characters (e.g. 'hello' becomes 'hlelo')" className="tooltip">
                     Allow swaps
                     <input name={optionsKeys.allowSwaps} type="checkbox" checked={options.allowSwaps} onChange={e => handleChange(e)} />
                 </label>
-                <label htmlFor={optionsKeys.allowPunctuationRemoval}>
+                <label htmlFor={optionsKeys.allowPunctuationRemoval} data-text="Deletes individual punctuation marks, such as commas" className="tooltip">
                     Allow punctuation to be removed
                     <input name={optionsKeys.allowPunctuationRemoval} type="checkbox" checked={options.allowPunctuationRemoval} onChange={e => handleChange(e)} />
                 </label>
-                <label htmlFor={optionsKeys.mutationRate}>
+                <label htmlFor={optionsKeys.mutationRate} data-text="Sets the overall amount of mutations added" className="tooltip">
                     Mutation rate (0 - 1.00)
                     <input
                         name={optionsKeys.mutationRate}
@@ -95,7 +95,7 @@ const MutationOptionsDisplay: FC<MutationOptionsDisplayProps> = ({ onOptionsChan
                         value={options.mutationRate}
                         onChange={e => handleChange(e)} />
                 </label>
-                <label htmlFor={optionsKeys.seed}>
+                <label htmlFor={optionsKeys.seed} data-text="Replaces randomness with a deterministic outcome" className="tooltip">
                     Seed (optional)
                     <input name={optionsKeys.seed} type="number" value={options.seed ?? ''} onChange={e => handleChange(e)} />
                 </label>

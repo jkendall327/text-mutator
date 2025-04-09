@@ -1,7 +1,6 @@
 .mutation-options {
     display: flex;
     flex-direction: column;
-    gap: 25%;
     justify-content: space-around;
     padding-top: 1em;
 }
@@ -10,7 +9,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 0.75em;
+    margin-bottom: 2.75em;
 }
 
 .mutation-options input {
@@ -20,4 +19,29 @@
 .mutation-options input[type="number"] {
     width: 6em;
     text-align: right;
+}
+
+/* https://blog.logrocket.com/creating-beautiful-tooltips-with-only-css/ */
+.tooltip {
+    position: relative;
+    border-bottom: 1px dashed #000;
+}
+
+.tooltip:before {
+    content: attr(data-text);
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    left: 20%;
+    width: 200px;
+    padding: 10px;
+    border-radius: 10px;
+    background: #000;
+    color: #fff;
+    text-align: center;
+    display: none;
+}
+
+.tooltip:hover:before {
+    display: block;
 }

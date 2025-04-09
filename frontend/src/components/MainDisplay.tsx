@@ -41,14 +41,13 @@ export default function Mutator() {
     return (
         <>
             <div className='main-display'>
-                {/* <div className='mutation-options'>
+                <div className='mutation-options-section'>
                     <MutationOptionsDisplay
                         onOptionsChanged={handleOptionsChanged}
                     />
-                </div> */}
+                </div>
 
                 <div className='main-columns'>
-
                     <div className='input-text-section'>
                         <button disabled={text === ""} onClick={() => handleClick()}>
                             Mutate!

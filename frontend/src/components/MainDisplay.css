@@ -23,6 +23,11 @@
     flex-basis: 0;
 }
 
+/* Hide by default. */
+.mutation-options-section {
+    display: none;
+}
+
 .text-area>textarea {
     background-color: #696969;
     min-height: 600px;

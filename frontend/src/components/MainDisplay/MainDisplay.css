@@ -74,6 +74,7 @@ dialog::backdrop {
     background-color: #696969;
     min-height: 600px;
     min-width: 400px;
+    max-width: 400px;
     border-radius: 2%;
 }
 

@@ -6,7 +6,7 @@ export default function ServerStatus() {
 
     return (
         <div className="server-status">
-            <div className={error ? 'indicator-dead' : 'indicator-alive'} />
+            <div id='loading-indicator' className={error ? 'indicator-dead' : 'indicator-alive'} />
 
             <p className="server-status-description">
                 Backend: {isFetching ? "Checking..." : error ? `Error: ${error.message}` : data}

@@ -1,6 +1,8 @@
 # Text Mutator
 
-A web app that deliberately introduces minor errors into text to aid proofreading.
+![A screenshot of the main Text Mutator interface](docs/design.png)
+
+A [web app](https://happy-rock-0d924d903.6.azurestaticapps.net/) that deliberately introduces minor errors into text to aid proofreading.
 
 ## Why?
 
@@ -16,14 +18,35 @@ This app warps your text in small ways that force you to read it carefully, with
 - Configurable mutation rate
 - Configurable seed for determinism
 
-## Implementation
+## Implementation, installation, testing
 
-This app is a learning project for me, broken into three areas:
-- Frontend development with React.
-- Backend API dev with Rust.
-- Bicep for infrastructure-as-code deployment.
+The app has three main moving parts.
 
-More details TBD.
+- A React front-end, using Vite.
+- A HTTP API in Rust.
+- Bicep files for infrastructure-as-code deployment.
+
+```bash
+git clone https://github.com/jkendall327/text-mutator
+cd text-mutator
+```
+
+For the backend:
+```bash
+cd backend
+cargo test
+cargo run
+```
+
+For the frontend:
+```bash
+cd backend
+npm run test
+npm run dev
+```
+
+For deployment, `cd` into `text-mutator/.infra` and use the `az deployment` comnands.
+I haven't yet invested effort in making the Bicep files tenancy-agnostic, so you may have to change some parameters for your Azure environment.
 
 ## License
 

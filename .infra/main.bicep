@@ -1,9 +1,14 @@
 // az deployment sub what-if --location westeurope --template-file main.bicep --parameters parameters.bicepparam
 // az deployment sub create --location westeurope --template-file .infra/main.bicep --parameters .infra/parameters.bicepparam
 // az deployment group create --resource-group textmutator --template-file .infra/main.bicep --parameters .infra/parameters.bicepparam
+@description('The environment to deploy to.')
 param environment string = 'dev'
+
+@description('The semantic name of the application, for tagging.')
 param appName string = 'text-mutator'
-param imageName string
+
+@description('The name of the Docker image to build for the backend.')
+param imageName string = 'textmutator'
 
 var resourceToken = uniqueString(resourceGroup().id)
 

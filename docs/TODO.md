@@ -1,5 +1,11 @@
-- remember to use relative urls for frontend-to-backend calls.
 - place the managed identity used to execute the bicep pipeline in its own resource group to avoid lifetime issues with it being recreated/deleted.
 - setup a git hook to prevent pushes if tests/builds fail locally?
-
-https://vite.dev/guide/
+- begin writing up docs
+- begin cleaning up the code?
+- properly send over mutations from rust
+- try highlighting the mutations in the frontend?
+- vertical scrollbars look ugly if too much text in input column
+- make input column match mutation column aesthetically
+- background scrolling effect
+- general aesthetics
+- make the bicep pipeline truly idempotent (linked backend, roles, app service container refresh...)

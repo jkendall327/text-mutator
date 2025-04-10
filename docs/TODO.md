@@ -4,6 +4,6 @@
 - try highlighting the mutations in the frontend?
 - vertical scrollbars look ugly if too much text in input column
 - make input column match mutation column aesthetically
-- background scrolling effect
+- background scrolling effect (https://css-tricks.com/books/fundamental-css-tactics/infinite-scrolling-background-image/)
 - general aesthetics
 - make the bicep pipeline truly idempotent (linked backend, roles...)

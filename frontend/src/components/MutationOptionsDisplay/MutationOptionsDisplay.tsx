@@ -1,4 +1,4 @@
-import { ChangeEvent, FC, useEffect, useState } from "react"
+import { ChangeEvent, useEffect, useState } from "react"
 import { MutationOptions } from "../../models";
 import './MutationOptionsDisplay.css'
 import { defaultOptions } from "./defaultMutationOptions";

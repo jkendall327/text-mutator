@@ -9,3 +9,4 @@
 - background scrolling effect
 - general aesthetics
 - make the bicep pipeline truly idempotent (linked backend, roles, app service container refresh...)
+- az webapp restart --name MyWebapp --resource-group MyResourceGroup

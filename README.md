@@ -1,6 +1,6 @@
 # Text Mutator
 
-![A screenshot of the main Text Mutator interface](docs/design.png)
+![A screenshot of the main Text Mutator interface](docs/mutator.png)
 
 A [web app](https://happy-rock-0d924d903.6.azurestaticapps.net/) that deliberately introduces minor errors into text to aid proofreading.
 

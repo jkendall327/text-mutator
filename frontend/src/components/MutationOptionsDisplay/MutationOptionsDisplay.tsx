@@ -15,7 +15,7 @@ const optionsKeys: { [K in keyof MutationOptions]: K } = {
     seed: "seed"
 };
 
-const MutationOptionsDisplay: FC<MutationOptionsDisplayProps> = ({ onOptionsChanged }) => {
+const MutationOptionsDisplay = ({ onOptionsChanged }: MutationOptionsDisplayProps) => {
     const [options, setOptions] = useState<MutationOptions>(defaultOptions);
 
     useEffect(() => {
@@ -27,25 +27,27 @@ const MutationOptionsDisplay: FC<MutationOptionsDisplayProps> = ({ onOptionsChan
 
         let newValue: string | number | boolean | undefined;
 
+        const key = name as keyof MutationOptions;
+
         if (type === 'checkbox') {
             newValue = checked;
         } else if (type === 'number') {
             if (value === '') {
                 // Handle empty number input: undefined for seed, maybe 0 for rate?
-                newValue = name === 'seed' ? undefined : 0;
+                newValue = key === 'seed' ? undefined : 0;
             } else {
                 // Parse number inputs
-                const num = name === 'mutationRate' ? parseFloat(value) : parseInt(value, 10);
+                const num = key === 'mutationRate' ? parseFloat(value) : parseInt(value, 10);
 
                 if (!isNaN(num)) {
                     newValue = num;
 
-                    if (name === 'mutationRate') {
+                    if (key === 'mutationRate') {
                         // Clamp between 0 and 1.
                         newValue = Math.max(0, Math.min(1, newValue));
                     }
                 } else {
-                    console.warn(`Invalid number input for ${name}: ${value}`);
+                    console.warn(`Invalid number input for ${key}: ${value}`);
                     return;
                 }
             }
@@ -55,8 +57,6 @@ const MutationOptionsDisplay: FC<MutationOptionsDisplayProps> = ({ onOptionsChan
         }
 
         setOptions(prev => {
-            const key = name as keyof MutationOptions
-
             return {
                 ...prev,
                 [key]: newValue

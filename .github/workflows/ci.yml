@@ -13,6 +13,9 @@ on:
           - warning
           - debug
   push:
+    paths:
+      - "!docs/**"
+      - "!README.md"
     branches: ["master"]
   pull_request:
     branches: ["master"]

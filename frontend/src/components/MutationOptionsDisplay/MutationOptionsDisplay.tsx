@@ -1,6 +1,7 @@
 import { ChangeEvent, FC, useEffect, useState } from "react"
 import { MutationOptions } from "../../models";
 import './MutationOptionsDisplay.css'
+import { defaultOptions } from "./defaultMutationOptions";
 
 interface MutationOptionsDisplayProps {
     onOptionsChanged: (options: MutationOptions) => void;
@@ -15,13 +16,7 @@ const optionsKeys: { [K in keyof MutationOptions]: K } = {
 };
 
 const MutationOptionsDisplay: FC<MutationOptionsDisplayProps> = ({ onOptionsChanged }) => {
-    const [options, setOptions] = useState<MutationOptions>({
-        allowHomophones: true,
-        allowPunctuationRemoval: true,
-        allowSwaps: true,
-        mutationRate: 0.05,
-        seed: undefined
-    })
+    const [options, setOptions] = useState<MutationOptions>(defaultOptions);
 
     useEffect(() => {
         onOptionsChanged(options);

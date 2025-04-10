@@ -147,7 +147,7 @@ mod tests {
         app,
         env::EnvironmentVariables,
         get_route, handler,
-        models::{MutationOptions, MutationRequest},
+        models::{MutationRequest, MutationRequestOptions},
     };
     use axum::{
         Router,
@@ -205,7 +205,7 @@ mod tests {
 
         let req = MutationRequest {
             text: invalid_input,
-            config: MutationOptions::default(),
+            config: MutationRequestOptions::default(),
         };
 
         let response = send_json_request(app, req).await;

@@ -3,7 +3,7 @@ use rand::{SeedableRng, seq::SliceRandom};
 use tracing::{debug, info, trace};
 
 use crate::homophones::HomophoneSets;
-use crate::models::{Mutation, MutationItem, MutationResponse};
+use crate::models::{Mutation, MutationResult};
 
 /// Applies mutations to text
 pub struct TextMutator {
@@ -108,7 +108,7 @@ impl TextMutator {
         mutations
     }
 
-    pub(crate) fn mutate(&mut self, text: &str) -> MutationResponse {
+    pub(crate) fn mutate(&mut self, text: &str) -> MutationResult {
         info!("Mutating text of length {}", text.len());
         let possible_mutations = self.find_possible_mutations(text);
 
@@ -127,7 +127,7 @@ impl TextMutator {
 
         if possible_mutations.is_empty() || num_mutations == 0 {
             info!("No mutations to apply");
-            return MutationResponse {
+            return MutationResult {
                 mutated_text: text.to_string(),
                 mutations: vec![],
             };
@@ -157,19 +157,9 @@ impl TextMutator {
 
         let result = self.apply_mutations(text, &selected_mutations);
 
-        let mapped = selected_mutations
-            .iter()
-            .map(|f| MutationItem {
-                start: 1,
-                end: 2,
-                r#type: Mutation::SwapLetters(1),
-            })
-            .collect::<Vec<MutationItem>>();
-
-        // TODO: actually return rich info for mutations.
-        MutationResponse {
+        MutationResult {
             mutated_text: result,
-            mutations: mapped,
+            mutations: selected_mutations,
         }
     }
 

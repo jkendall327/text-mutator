@@ -6,7 +6,9 @@ use axum::{
 use tracing::info;
 
 use crate::{
-    models::{Mutation, MutationDto, MutationItemDto, MutationRequest, MutationResponseDto},
+    models::{
+        Mutation, MutationRequest, MutationResponse, MutationResponseItem, MutationResponseType,
+    },
     mutator::TextMutator,
 };
 
@@ -52,23 +54,27 @@ pub async fn mutate(Json(payload): Json<MutationRequest>) -> impl IntoResponse {
 
     let response = text_mutator.mutate(&payload.text);
 
-    let response = MutationResponseDto {
+    let response = MutationResponse {
         mutated_text: response.mutated_text,
         mutations: response
             .mutations
             .iter()
-            .map(|f| {
-                let mapped_type = match f.r#type {
-                    Mutation::SwapLetters(_) => MutationDto::SwapLetters,
-                    Mutation::RemovePunctuation(_) => MutationDto::RemovePunctuation,
-                    Mutation::ReplaceHomophone(_, _) => MutationDto::ReplaceHomophone,
-                };
-
-                MutationItemDto {
-                    start: f.start,
-                    end: f.end,
-                    r#type: mapped_type,
-                }
+            .map(|f| match f {
+                Mutation::SwapLetters(i) => MutationResponseItem {
+                    start: *i,
+                    end: *i,
+                    r#type: MutationResponseType::SwapLetters,
+                },
+                Mutation::RemovePunctuation(i) => MutationResponseItem {
+                    start: *i,
+                    end: *i,
+                    r#type: MutationResponseType::RemovePunctuation,
+                },
+                Mutation::ReplaceHomophone(i, e) => MutationResponseItem {
+                    start: *i,
+                    end: *e,
+                    r#type: MutationResponseType::ReplaceHomophone,
+                },
             })
             .collect(),
     };

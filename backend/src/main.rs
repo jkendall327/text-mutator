@@ -4,6 +4,9 @@ mod homophones;
 mod models;
 mod mutator;
 
+use std::fs::File;
+use std::io::BufReader;
+use std::sync::Arc;
 use std::time::Duration;
 
 use axum::{
@@ -14,12 +17,14 @@ use axum::{
     routing::{get, post},
 };
 use env::EnvironmentVariables;
+use handler::AppState;
+use homophones::HomophoneSets;
 use tokio::signal;
 use tower_http::{
     cors::{Any, CorsLayer},
     trace::TraceLayer,
 };
-use tracing::{Level, Span};
+use tracing::{Level, Span, info};
 use tracing_appender::rolling;
 use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt};
 use uuid::Uuid;
@@ -33,7 +38,14 @@ async fn main() -> anyhow::Result<()> {
 
     setup_logging();
 
-    let app = app(&env);
+    // Load homophones
+    let file = File::open("homophones.json").expect("Failed to open homophones.json");
+    let reader = BufReader::new(file);
+    let sets: Vec<Vec<String>> = serde_json::from_reader(reader).expect("Failed to parse homophones.json");
+    let homophones = Arc::new(HomophoneSets { sets });
+    let state = AppState { homophones };
+
+    let app = app(&env, state);
 
     let backend_url = env.backend_url.to_string();
 
@@ -73,7 +85,7 @@ fn setup_logging() {
     tracing::info!("Starting text-mutator");
 }
 
-fn app(env: &EnvironmentVariables) -> Router {
+fn app(env: &EnvironmentVariables, state: AppState) -> Router {
     let cors = CorsLayer::new()
         .allow_origin(env.frontend_url.parse::<HeaderValue>().unwrap())
         .allow_headers(Any)
@@ -105,7 +117,8 @@ fn app(env: &EnvironmentVariables) -> Router {
         .route(get_route("mutate").as_str(), post(handler::mutate))
         .fallback(handler::fallback)
         .layer(cors)
-        .layer(tracer);
+        .layer(tracer)
+        .with_state(state);
 
     app
 }
@@ -148,6 +161,8 @@ mod tests {
         env::EnvironmentVariables,
         get_route, handler,
         models::{MutationRequest, MutationRequestOptions},
+        homophones::HomophoneSets,
+        handler::AppState,
     };
     use axum::{
         Router,
@@ -157,10 +172,17 @@ mod tests {
     use http_body_util::BodyExt;
     use serde_json::json;
     use tower::ServiceExt;
+    use std::sync::Arc;
+
+    fn get_test_state() -> AppState {
+        AppState {
+            homophones: Arc::new(HomophoneSets::new_for_tests()),
+        }
+    }
 
     #[tokio::test]
     async fn app_starts_up_and_serves_healthcheck() {
-        let app = app(&EnvironmentVariables::empty());
+        let app = app(&EnvironmentVariables::empty(), get_test_state());
 
         let response = app
             .oneshot(
@@ -180,7 +202,7 @@ mod tests {
 
     #[tokio::test]
     async fn fake_endpoint_returns_404() {
-        let app = app(&EnvironmentVariables::empty());
+        let app = app(&EnvironmentVariables::empty(), get_test_state());
 
         let response = app
             .oneshot(
@@ -197,7 +219,7 @@ mod tests {
 
     #[tokio::test]
     async fn mutate_returns_error_when_input_is_too_large() {
-        let app = app(&EnvironmentVariables::empty());
+        let app = app(&EnvironmentVariables::empty(), get_test_state());
 
         let too_big = handler::MAX_INPUT_LENGTH + 1;
 

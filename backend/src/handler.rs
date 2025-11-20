@@ -1,16 +1,24 @@
 use axum::{
     Json,
+    extract::State,
     http::{StatusCode, Uri},
     response::IntoResponse,
 };
+use std::sync::Arc;
 use tracing::info;
 
 use crate::{
+    homophones::HomophoneSets,
     models::{
         Mutation, MutationRequest, MutationResponse, MutationResponseItem, MutationResponseType,
     },
     mutator::TextMutator,
 };
+
+#[derive(Clone)]
+pub struct AppState {
+    pub homophones: Arc<HomophoneSets>,
+}
 
 pub async fn health() -> &'static str {
     "Healthy"
@@ -27,7 +35,10 @@ pub async fn fallback(uri: Uri) -> (StatusCode, String) {
 pub const MAX_INPUT_LENGTH: usize = 5000;
 
 #[axum::debug_handler]
-pub async fn mutate(Json(payload): Json<MutationRequest>) -> impl IntoResponse {
+pub async fn mutate(
+    State(state): State<AppState>,
+    Json(payload): Json<MutationRequest>,
+) -> impl IntoResponse {
     let length = payload.text.chars().count();
 
     if length > MAX_INPUT_LENGTH {
@@ -50,6 +61,7 @@ pub async fn mutate(Json(payload): Json<MutationRequest>) -> impl IntoResponse {
         swap_letters,
         remove_punctuation,
         homophones,
+        state.homophones,
     );
 
     let response = text_mutator.mutate(&payload.text);

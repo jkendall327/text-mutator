@@ -1,5 +1,6 @@
 use rand::rngs::StdRng;
 use rand::{SeedableRng, seq::SliceRandom};
+use std::sync::Arc;
 use tracing::{debug, info, trace};
 
 use crate::homophones::HomophoneSets;
@@ -12,7 +13,7 @@ pub struct TextMutator {
     swap_letters: bool,
     remove_punctuation: bool,
     use_homophones: bool,
-    homophones: HomophoneSets,
+    homophones: Arc<HomophoneSets>,
 }
 
 impl TextMutator {
@@ -22,6 +23,7 @@ impl TextMutator {
         swap_letters: bool,
         remove_punctuation: bool,
         homophones: bool,
+        homophone_sets: Arc<HomophoneSets>,
     ) -> Self {
         info!("Creating TextMutator with mutation_rate={}", mutation_rate);
         debug!(
@@ -43,7 +45,7 @@ impl TextMutator {
             swap_letters,
             remove_punctuation,
             use_homophones: homophones,
-            homophones: HomophoneSets::new(),
+            homophones: homophone_sets,
         }
     }
 
@@ -252,6 +254,7 @@ mod tests {
             swap_letters,
             remove_punctuation,
             homophones,
+            Arc::new(HomophoneSets::new_for_tests()),
         )
     }
 
